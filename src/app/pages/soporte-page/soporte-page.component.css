@@ -1,0 +1,138 @@
+.support-container {
+  padding: 30px 70px;
+  max-width: 800px;
+  margin: 0;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.support-header {
+  margin-bottom: 30px;
+}
+
+.support-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0;
+}
+
+.faq-section {
+  margin-bottom: 40px;
+}
+
+.faq-item {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.faq-item:hover {
+  background-color: #e9ecef;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.question-text {
+  flex: 1;
+  margin-right: 15px;
+  line-height: 1.5;
+}
+
+.faq-icon {
+  font-size: 1.2rem;
+  color: #6b7280;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.faq-icon.rotated {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background-color: #ffffff;
+  border-top: 1px solid #e9ecef;
+}
+
+.faq-answer.expanded {
+  max-height: 200px;
+}
+
+.faq-answer p {
+  padding: 20px;
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.contact-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.whatsapp-button {
+  background-color: #25d366;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-button:hover {
+  background-color: #20c55a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-button i {
+  font-size: 1.2rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .support-container {
+    padding: 15px 20px;
+  }
+  
+  .support-title {
+    font-size: 1.5rem;
+  }
+  
+  .faq-question {
+    padding: 15px;
+  }
+  
+  .question-text {
+    font-size: 0.9rem;
+  }
+  
+  .whatsapp-button {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+  }
+}

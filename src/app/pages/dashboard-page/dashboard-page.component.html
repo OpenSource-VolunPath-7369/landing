@@ -1,0 +1,94 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Dashboard</h1>
+  </div>
+  
+  <!-- Estados de carga y error -->
+  <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+      <p class="mt-4 text-gray-600">Cargando publicaciones...</p>
+    </div>
+  </div>
+
+  <div *ngIf="error && !loading" class="text-center py-12">
+    <div class="text-red-600 mb-4">
+      <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z" />
+      </svg>
+    </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">Error al cargar publicaciones</h3>
+    <p class="text-gray-600 mb-4">{{ error }}</p>
+    <button 
+      (click)="retry()" 
+      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+      <svg class="-ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+      Reintentar
+    </button>
+  </div>
+
+  <!-- Navigation Bar -->
+  <div *ngIf="!loading && !error" class="nav-bar">
+    <div 
+      *ngFor="let tab of tabs" 
+      class="nav-item"
+      [class.active]="tab.isActive"
+      (click)="selectTab(tab.id)">
+      {{ tab.name }}
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loading && !error" class="main-content">
+    <!-- Publication Card -->
+    <div class="publication-card" *ngFor="let publication of publications">
+      <div class="publication-image">
+        <img [src]="publication.image" [alt]="publication.title || publication.caption" class="post-image">
+      </div>
+      
+      <div class="publication-details">
+        <div class="publication-stats">
+          <span class="likes">Likes: {{ publication.likes }}</span>
+          <span class="date-time">{{ publication.date }} {{ publication.time }}</span>
+        </div>
+        
+        <button 
+          class="delete-button"
+          (click)="deletePublication(publication.id)">
+          Eliminar
+        </button>
+      </div>
+      
+      <div class="publication-caption">
+        <h3 class="publication-title">{{ publication.title }}</h3>
+        <p>{{ publication.description || publication.caption }}</p>
+        <div *ngIf="publication.tags && publication.tags.length > 0" class="tags">
+          <span *ngFor="let tag of publication.tags" class="tag">{{ tag }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="publications.length === 0" class="empty-state">
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No hay publicaciones</h3>
+        <p class="mt-1 text-sm text-gray-500">Comienza creando tu primera publicación.</p>
+      </div>
+    </div>
+
+    <!-- New Publication Button -->
+    <div class="action-section">
+      <button 
+        class="new-publication-button"
+        (click)="createNewPublication()">
+        <i class="fa-solid fa-plus"></i>
+        Nueva Publicación
+      </button>
+    </div>
+  </div>
+</div>

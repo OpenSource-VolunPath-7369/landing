@@ -1,0 +1,71 @@
+<div class="community-container">
+  <div class="community-header">
+    <h1 class="community-title">{{ 'community.title' | translate }}</h1>
+  </div>
+  
+  <div class="community-content">
+    <!-- Main Feed -->
+    <div class="feed-section">
+      <div 
+        *ngFor="let activity of activities" 
+        class="activity-card">
+        
+        <!-- Organization Header -->
+        <div class="activity-header">
+          <div class="organization-info">
+            <img 
+              [src]="activity.organizationLogo" 
+              [alt]="activity.organizationName"
+              class="organization-logo">
+            <span class="organization-name">{{ activity.organizationName }}</span>
+          </div>
+        </div>
+        
+        <!-- Activity Image -->
+        <div class="activity-image">
+          <img 
+            [src]="activity.image" 
+            [alt]="activity.description"
+            class="post-image">
+        </div>
+        
+        <!-- Activity Content -->
+        <div class="activity-content">
+          <div class="activity-engagement">
+            <button 
+              class="like-button"
+              [class.liked]="activity.isLiked"
+              (click)="toggleLike(activity)">
+              <i class="fa-solid fa-heart"></i>
+              <span>{{ activity.likes }}</span>
+            </button>
+          </div>
+          
+          <div class="activity-description">
+            <p>{{ activity.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Organizations Sidebar -->
+    <div class="sidebar-section">
+      <div class="organizations-card">
+        <h3 class="organizations-title">{{ 'community.organizations' | translate }}</h3>
+        
+        <div class="organizations-list">
+          <div 
+            *ngFor="let org of organizations" 
+            class="organization-item">
+            <img 
+              [src]="org.logo || '/assets/mundo.png'" 
+              [alt]="org.name"
+              class="org-logo"
+              (error)="$event.target.src='/assets/mundo.png'">
+            <span class="org-name">{{ org.name }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

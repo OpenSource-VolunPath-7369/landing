@@ -1,0 +1,140 @@
+<div class="modal-container">
+  <div class="modal-header">
+    <h2 class="modal-title">Enviar Mensaje a Voluntarios</h2>
+    <button mat-icon-button (click)="onCancel()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="modal-content">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <p class="mt-4 text-gray-600">Cargando voluntarios...</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+      <div class="flex items-center">
+        <svg class="h-5 w-5 text-red-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-red-800 font-medium">{{ error }}</p>
+      </div>
+    </div>
+
+    <!-- Form Content -->
+    <div *ngIf="!loading">
+      <form [formGroup]="messageForm" (ngSubmit)="onSubmit()">
+        <!-- Subject -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Asunto *</mat-label>
+          <input matInput formControlName="subject">
+          <mat-error *ngIf="messageForm.get('subject')?.hasError('required')">
+            El asunto es requerido
+          </mat-error>
+          <mat-error *ngIf="messageForm.get('subject')?.hasError('minlength')">
+            El asunto debe tener al menos 5 caracteres
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Content -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Mensaje *</mat-label>
+          <textarea matInput formControlName="content" 
+                    rows="6"></textarea>
+          <mat-error *ngIf="messageForm.get('content')?.hasError('required')">
+            El mensaje es requerido
+          </mat-error>
+          <mat-error *ngIf="messageForm.get('content')?.hasError('minlength')">
+            El mensaje debe tener al menos 10 caracteres
+          </mat-error>
+        </mat-form-field>
+
+        <!-- URL -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>URL (opcional)</mat-label>
+          <input matInput formControlName="url" 
+                 type="url">
+          <mat-hint>Agrega un enlace relacionado con el mensaje</mat-hint>
+          <mat-error *ngIf="messageForm.get('url')?.hasError('pattern')">
+            Por favor ingresa una URL válida (debe comenzar con http:// o https://)
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Volunteers Selection -->
+        <div class="volunteers-section">
+          <div class="volunteers-header">
+            <h3 class="section-title">Seleccionar Voluntarios</h3>
+            <button type="button" mat-button (click)="selectAll()" class="select-all-button">
+              {{ allSelected ? 'Deseleccionar todos' : 'Seleccionar todos' }}
+            </button>
+          </div>
+          
+          <div class="selected-count">
+            <span *ngIf="selectedCount > 0" class="count-badge">
+              {{ selectedCount }} voluntario{{ selectedCount > 1 ? 's' : '' }} seleccionado{{ selectedCount > 1 ? 's' : '' }}
+            </span>
+            <span *ngIf="selectedCount === 0" class="count-badge empty">
+              Ningún voluntario seleccionado
+            </span>
+          </div>
+
+          <div class="volunteers-list">
+            <div *ngFor="let volunteer of volunteers" 
+                 class="volunteer-item"
+                 (click)="toggleVolunteerSelection(volunteer.id)">
+              <mat-checkbox 
+                [checked]="isVolunteerSelected(volunteer.id)"
+                (change)="toggleVolunteerSelection(volunteer.id)"
+                (click)="$event.stopPropagation()">
+              </mat-checkbox>
+              <img [src]="volunteer.avatar || '/assets/andrea.png'" 
+                   [alt]="volunteer.name"
+                   class="volunteer-avatar">
+              <div class="volunteer-info">
+                <div class="volunteer-name">{{ volunteer.name }}</div>
+                <div class="volunteer-email">
+                  <mat-icon class="contact-icon">email</mat-icon>
+                  {{ volunteer.email }}
+                </div>
+                <div *ngIf="volunteer.location" class="volunteer-location">
+                  <mat-icon class="location-icon">location_on</mat-icon>
+                  {{ volunteer.location }}
+                </div>
+                <div *ngIf="volunteer.skills && volunteer.skills.length > 0" class="volunteer-skills">
+                  <mat-icon class="skills-icon">star</mat-icon>
+                  <span *ngFor="let skill of volunteer.skills.slice(0, 3); let last = last">
+                    {{ skill }}<span *ngIf="!last">, </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="volunteers.length === 0" class="empty-volunteers">
+            <p class="text-gray-500">No hay voluntarios disponibles</p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-actions">
+    <button mat-button type="button" (click)="onCancel()" [disabled]="sending">
+      Cancelar
+    </button>
+    <button mat-raised-button 
+            color="primary" 
+            type="button"
+            [disabled]="sending || selectedCount === 0 || !messageForm.valid"
+            (click)="onSubmit()">
+      <mat-icon *ngIf="!sending">send</mat-icon>
+      <mat-icon *ngIf="sending" class="animate-spin">refresh</mat-icon>
+      {{ sending ? 'Enviando...' : `Enviar a ${selectedCount} voluntario${selectedCount !== 1 ? 's' : ''}` }}
+    </button>
+  </div>
+</div>
+

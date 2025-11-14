@@ -1,0 +1,45 @@
+{
+  "app": {
+    "title": "Volunpath"
+  },
+  "community": {
+    "title": "Comunidad",
+    "organizations": "Organizaciones",
+    "register": "Registrarse",
+    "likes": "Me gusta",
+    "volunteers": "voluntarios",
+    "readMore": "Leer más",
+    "explore": "Explora la comunidad"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "community": "Comunidad",
+    "messages": "Mensajes",
+    "notifications": "Notificaciones",
+    "profile": "Perfil",
+    "support": "Ayuda y Soporte",
+    "newPublication": "Nueva Publicación",
+    "logout": "Salir",
+    "manageOrganization": "Gestiona tu organización",
+    "receiveSendMessages": "Recibe y envía mensajes",
+    "receiveNotifications": "Recibe notificaciones",
+    "configureProfile": "Configura tu perfil",
+    "resolveDoubts": "Resuelve tus dudas"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "retry": "Reintentar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "confirmLogout": "¿Estás seguro de que deseas salir?",
+    "alreadyRegistered": "Ya estás registrado en esta actividad",
+    "registeredSuccessfully": "Te has registrado exitosamente en la actividad",
+    "errorRegistering": "Error al registrarse en la actividad",
+    "errorLoadingActivities": "Error al cargar las actividades"
+  }
+}
+

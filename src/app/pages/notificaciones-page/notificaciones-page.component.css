@@ -1,0 +1,132 @@
+.notifications-container {
+  padding: 20px 20px 20px 40px;
+  max-width: 800px;
+  margin: 0;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.notifications-header {
+  margin-bottom: 30px;
+}
+
+.notifications-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.notification-item:hover {
+  background-color: #e9ecef;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notification-item.unread {
+  background-color: #f8f9fa;
+  border-left: 4px solid #3b82f6;
+}
+
+.notification-icon {
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  background-color: white;
+  border: 1px solid #e9ecef;
+  border-radius: 50%;
+  padding: 4px;
+  overflow: hidden;
+}
+
+.fa-icon {
+  font-size: 1.2rem;
+  color: #dc2626;
+}
+
+.fa-icon.fa-hand-holding-heart {
+  color: #dc2626;
+}
+
+.fa-icon.fa-face-smile {
+  color: #f59e0b;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.notification-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.notification-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.notification-title {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.notification-message {
+  color: #6b7280;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .notifications-container {
+    padding: 15px;
+  }
+  
+  .notifications-title {
+    font-size: 1.5rem;
+  }
+  
+  .notification-item {
+    padding: 12px 15px;
+  }
+  
+  .notification-icon {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .profile-image {
+    width: 35px;
+    height: 35px;
+  }
+}

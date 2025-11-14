@@ -1,0 +1,100 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- Logo -->
+    <div class="logo-section">
+      <div class="logo-box">
+        <img src="/assets/volunpath-logo.png" 
+             alt="Volunpath Logo" 
+             class="logo-image"
+             (error)="onLogoError($event)">
+      </div>
+      <h1 class="logo-text">Volunpath</h1>
+    </div>
+
+    <!-- Welcome Message -->
+    <div class="welcome-section">
+      <h2 class="welcome-title">Bienvenido!</h2>
+      <p class="welcome-subtitle">Ingresa tu cuenta</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="error-message">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ error }}</span>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- Username Field -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Usuario</mat-label>
+        <mat-icon matPrefix>person</mat-icon>
+        <input matInput 
+               formControlName="username" 
+               autocomplete="username">
+        <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+          El usuario es requerido
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('username')?.hasError('minlength')">
+          El usuario debe tener al menos 3 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Password Field -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <mat-icon matPrefix>lock</mat-icon>
+        <input matInput 
+               [type]="hidePassword ? 'password' : 'text'"
+               formControlName="password" 
+               autocomplete="current-password">
+        <button mat-icon-button 
+                matSuffix 
+                (click)="togglePasswordVisibility()" 
+                type="button"
+                [attr.aria-label]="'Ocultar contraseña'"
+                [attr.aria-pressed]="hidePassword">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+          La contraseña es requerida
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+          La contraseña debe tener al menos 6 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Remember Me and Forgot Password -->
+      <div class="form-options">
+        <mat-checkbox formControlName="rememberMe" class="remember-me">
+          Recuérdame
+        </mat-checkbox>
+        <a href="#" (click)="onForgotPassword(); $event.preventDefault()" class="forgot-password">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </div>
+
+      <!-- Submit Button -->
+      <button mat-raised-button 
+              color="primary" 
+              type="submit"
+              class="login-button"
+              [disabled]="loading || loginForm.invalid">
+        <mat-icon *ngIf="!loading">login</mat-icon>
+        <mat-icon *ngIf="loading" class="spinning">refresh</mat-icon>
+        <span>{{ loading ? 'Ingresando...' : 'Ingresar' }}</span>
+      </button>
+    </form>
+
+    <!-- Register Link -->
+    <div class="register-section">
+      <p class="register-text">
+        ¿Aún no tienes cuenta? 
+        <a href="#" (click)="onRegister(); $event.preventDefault()" class="register-link">
+          Regístrate Aquí
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,44 @@
+.language-switcher {
+  display: flex;
+  gap: 0;
+  width: 100%;
+}
+
+::ng-deep .language-switcher .mat-button-toggle-group {
+  width: 100%;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  border: 0.5px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  height: auto;
+}
+
+::ng-deep .language-switcher .mat-button-toggle {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0px 2px;
+  border: none !important;
+  line-height: 1;
+  transition: all 0.2s ease;
+  min-height: 16px;
+}
+
+/* Estilos para modo voluntario (sidebar verde) */
+::ng-deep .language-switcher .mat-button-toggle-checked {
+  background-color: rgba(0, 0, 0, 0.15) !important;
+  color: #1e293b !important;
+}
+
+::ng-deep .language-switcher .mat-button-toggle:not(.mat-button-toggle-checked) {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  color: #475569 !important;
+}
+
+::ng-deep .language-switcher .mat-button-toggle:hover:not(.mat-button-toggle-checked) {
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  color: #334155 !important;
+}
+
