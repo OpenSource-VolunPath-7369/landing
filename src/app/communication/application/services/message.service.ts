@@ -54,9 +54,20 @@ export class MessageService {
     const senderIcon = data.senderIcon || user?.avatar || '/assets/mundo.png';
     const senderName = data.senderName || user?.name || 'Usuario desconocido';
 
-    // Handle isRead field - backend may return isRead or is_read
-    const isRead = data.isRead !== undefined ? data.isRead : 
-                   (data.is_read !== undefined ? data.is_read : false);
+    // Handle isRead field - backend returns isRead as Boolean
+    const isRead = data.isRead !== undefined ? Boolean(data.isRead) : 
+                   (data.is_read !== undefined ? Boolean(data.is_read) : false);
+
+    // Handle timestamp - backend returns createdAt as LocalDateTime (ISO string)
+    let timestamp = new Date().toISOString();
+    if (data.createdAt) {
+      // Backend returns LocalDateTime which should be in ISO format
+      timestamp = data.createdAt;
+    } else if (data.timestamp) {
+      timestamp = data.timestamp;
+    } else if (data.updatedAt) {
+      timestamp = data.updatedAt;
+    }
 
     const message = new Message(
       String(data.id),
@@ -64,8 +75,8 @@ export class MessageService {
       senderName,
       senderIcon,
       String(data.recipientId),
-      data.content,
-      data.createdAt || data.timestamp || new Date().toISOString(),
+      data.content || '',
+      timestamp,
       isRead,
       this.mapBackendMessageTypeToFrontend(data.type),
       data.senderOrganization // Incluir el nombre de la organización si existe
@@ -84,15 +95,28 @@ export class MessageService {
   }
 
   getMessagesByUserId(userId: string): Observable<Message[]> {
+    console.log('Getting messages for userId:', userId);
     // Asegurar que tenemos los usuarios cargados
     return this.apiService.get<User[]>('users').pipe(
       switchMap(users => {
         this.usersCache = users;
+        console.log('Users loaded, fetching messages for userId:', userId);
         // El backend usa /messages/user/{userId}
         return this.apiService.get<any[]>(`messages/user/${userId}`);
       }),
       map(messages => {
-        const mappedMessages = messages.map(msg => this.mapToMessage(msg));
+        console.log('Raw messages from backend:', messages);
+        console.log('Messages count from backend:', messages?.length || 0);
+        if (!messages || messages.length === 0) {
+          console.warn('No messages returned from backend');
+          this.messagesSubject.next([]);
+          return [];
+        }
+        const mappedMessages = messages.map(msg => {
+          console.log('Mapping message:', msg);
+          return this.mapToMessage(msg);
+        });
+        console.log('Mapped messages:', mappedMessages);
         this.messagesSubject.next(mappedMessages);
         return mappedMessages;
       })
