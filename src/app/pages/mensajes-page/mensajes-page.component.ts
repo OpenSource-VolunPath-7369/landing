@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { MessageListComponent } from '../../components/message-list/message-list.component';
-import { MessageService } from '../../services/message.service';
+import { MessageService } from '../../communication/application/services/message.service';
 import { Message } from '../../interfaces';
+import { AuthService } from '../../auth/application/services/auth.service';
 
 @Component({
   selector: 'app-mensajes-page',
@@ -20,7 +21,10 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
   
   private destroy$ = new Subject<void>();
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.loadMessages();
@@ -35,13 +39,23 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = null;
 
-    // Load messages for current user (mock user ID)
-    const userId = '1';
+    // Get current authenticated user ID
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !currentUser.id) {
+      this.error = 'Usuario no autenticado';
+      this.loading = false;
+      console.error('No authenticated user found');
+      return;
+    }
+
+    const userId = currentUser.id;
+    console.log('Loading messages for user:', userId);
     
     this.messageService.getMessagesByUserId(userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (messages) => {
+          console.log('Messages loaded:', messages);
           this.messages = messages;
           this.loading = false;
         },
@@ -74,19 +88,31 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
   }
 
   markAllAsRead() {
-    const userId = '1'; // Mock user ID
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !currentUser.id) {
+      console.error('No authenticated user found');
+      return;
+    }
     
-    this.messageService.markAllAsRead(userId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          console.log('All messages marked as read');
-          this.unreadCount = 0;
-        },
-        error: (error) => {
-          console.error('Error marking all messages as read:', error);
-        }
-      });
+    // Mark all unread messages as read individually
+    const unreadMessages = this.messages.filter(m => 
+      m.recipientId === currentUser.id && m.isUnread()
+    );
+    
+    if (unreadMessages.length === 0) {
+      console.log('No unread messages to mark');
+      return;
+    }
+    
+    // Mark each message as read
+    unreadMessages.forEach(message => {
+      this.markAsRead(message.id);
+    });
+    
+    // Update unread count after a short delay
+    setTimeout(() => {
+      this.unreadCount = 0;
+    }, 500);
   }
 
   deleteMessage(messageId: string) {
@@ -96,6 +122,8 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             console.log('Message deleted:', messageId);
+            // Reload messages after deletion
+            this.loadMessages();
           },
           error: (error) => {
             console.error('Error deleting message:', error);
