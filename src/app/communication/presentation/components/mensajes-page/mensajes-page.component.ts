@@ -210,14 +210,22 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
               v.userId === userId || v.id === userId || v.email === this.currentUser?.email
             );
             // Usar userId del voluntario si está disponible, de lo contrario usar el userId del usuario
+            // También incluir el id del voluntario como fallback para buscar mensajes
             const actualUserId = volunteer?.userId || userId;
-            console.log('Voluntario encontrado:', volunteer?.name, 'userId:', volunteer?.userId, 'actualUserId:', actualUserId);
-            return actualUserId;
+            const volunteerId = volunteer?.id;
+            console.log('Voluntario encontrado:', volunteer?.name, 'userId:', volunteer?.userId, 'volunteerId:', volunteerId, 'actualUserId:', actualUserId);
+            // Retornar ambos IDs para buscar mensajes (userId es el principal, pero también buscar por volunteerId por si acaso)
+            return { actualUserId, volunteerId };
           })
         )
         .subscribe({
-          next: (actualUserId) => {
-            this.loadMessagesForUser(actualUserId, [actualUserId]);
+          next: ({ actualUserId, volunteerId }) => {
+            // Buscar mensajes usando userId (principal) y también volunteerId como fallback
+            const idsToSearch = volunteerId && volunteerId !== actualUserId 
+              ? [actualUserId, volunteerId] 
+              : [actualUserId];
+            console.log('IDs para buscar mensajes del voluntario:', idsToSearch);
+            this.loadMessagesForUser(actualUserId, idsToSearch);
           },
           error: (error) => {
             console.error('Error loading volunteer userId:', error);
@@ -621,7 +629,23 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
             if (!this.isVolunteerMode) {
               // Si el destinatario es un voluntario, usar userId si está disponible
               const volunteerRecipient = recipient as Volunteer;
+              // CRÍTICO: El backend necesita el userId del usuario (del contexto IAM), no el id del voluntario
+              // Si userId no está disponible, hay un problema con los datos del voluntario
+              if (!volunteerRecipient.userId) {
+                console.error('⚠️ ADVERTENCIA: El voluntario no tiene userId. Usando id como fallback, pero esto puede causar problemas.', {
+                  volunteerId: volunteerRecipient.id,
+                  volunteerName: volunteerRecipient.name,
+                  volunteerEmail: volunteerRecipient.email
+                });
+              }
               actualRecipientId = volunteerRecipient.userId || volunteerRecipient.id;
+              console.log('🔍 ID del voluntario destinatario:', {
+                originalRecipientId: recipientId,
+                volunteerId: volunteerRecipient.id,
+                volunteerUserId: volunteerRecipient.userId,
+                actualRecipientId: actualRecipientId,
+                usingUserId: !!volunteerRecipient.userId
+              });
             }
             
             const messageData: any = {
@@ -638,9 +662,12 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
               senderId: senderId,
               senderName: senderName,
               senderOrganization: senderOrganization,
-              recipientId: recipientId,
+              originalRecipientId: recipientId,
+              actualRecipientId: actualRecipientId,
               recipientName: recipient.name,
-              isVolunteerMode: this.isVolunteerMode
+              isVolunteerMode: this.isVolunteerMode,
+              volunteerUserId: !this.isVolunteerMode ? (recipient as Volunteer).userId : undefined,
+              volunteerId: !this.isVolunteerMode ? (recipient as Volunteer).id : undefined
             });
 
             sendObservables.push(this.messageService.sendMessage(messageData));
