@@ -30,15 +30,31 @@ export class ApiService {
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Ha ocurrido un error desconocido';
     
-    if (error.error instanceof ErrorEvent) {
+    // Error 0 típicamente significa CORS, servidor caído, o timeout
+    if (error.status === 0) {
+      errorMessage = 'No se pudo conectar con el servidor. Verifica que el backend esté funcionando y que no haya problemas de CORS.';
+      console.error('API Error (Status 0):', {
+        message: error.message,
+        url: error.url,
+        name: error.name,
+        error: error.error
+      });
+    } else if (error.error instanceof ErrorEvent) {
       // Error del lado del cliente
       errorMessage = `Error: ${error.error.message}`;
+      console.error('API Error (Client):', error.error);
     } else {
       // Error del lado del servidor
       errorMessage = `Error ${error.status}: ${error.error?.message || error.message}`;
+      console.error('API Error (Server):', {
+        status: error.status,
+        message: error.message,
+        error: error.error,
+        url: error.url
+      });
     }
     
-    console.error('API Error:', errorMessage);
+    console.error('Full API Error:', error);
     return throwError(() => new Error(errorMessage));
   }
 
