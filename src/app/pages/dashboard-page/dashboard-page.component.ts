@@ -66,6 +66,13 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
     this.dashboardService.selectTab(tabId);
   }
 
+  editPublication(publicationId: string) {
+    console.log('Editando publicación:', publicationId);
+    this.router.navigate(['/nueva-publicacion'], { 
+      queryParams: { id: publicationId, edit: 'true' } 
+    });
+  }
+
   deletePublication(publicationId: string) {
     if (confirm('¿Estás seguro de que quieres eliminar esta publicación?')) {
       this.dashboardService.deletePublication(publicationId)
@@ -73,6 +80,7 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             console.log('Publicación eliminada:', publicationId);
+            this.loadPublications(); // Recargar publicaciones después de eliminar
           },
           error: (error) => {
             console.error('Error deleting publication:', error);

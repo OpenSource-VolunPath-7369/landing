@@ -1,75 +1,97 @@
 /* Modern Form Container */
 .form-container {
-  padding: 40px;
+  padding: 30px 30px 30px 20px;
   max-width: 900px;
   margin: 0;
-  margin-left: 60px;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  background: #ffffff;
   min-height: 100vh;
   position: relative;
 }
 
-.form-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #659bb8, #4a7c95, #22c55e);
-}
-
 /* Header Section */
 .form-header {
-  margin-bottom: 50px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(14, 165, 233, 0.1);
   text-align: left;
   position: relative;
 }
 
 .form-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #1f2937, #374151);
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin: 0 0 15px 0;
+  margin: 0 0 8px 0;
   letter-spacing: -0.025em;
 }
 
 .form-subtitle {
   color: #6b7280;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   margin: 0;
-  font-weight: 400;
-  line-height: 1.6;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
 /* Form Card */
 .publication-form {
-  margin-top: 30px;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 
+    0 8px 16px rgba(14, 165, 233, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(14, 165, 233, 0.08);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(229, 231, 235, 0.8);
   backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.publication-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #0ea5e9, #3b82f6, #6366f1);
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease infinite;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .publication-form:hover {
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+  box-shadow: 
+    0 16px 32px rgba(14, 165, 233, 0.15),
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 0 0 2px rgba(14, 165, 233, 0.2);
+  transform: translateY(-4px);
+}
+
+.publication-form:hover::before {
+  opacity: 1;
 }
 
 .publication-form mat-card-content {
-  padding: 40px !important;
+  padding: 28px !important;
 }
 
 /* Form Fields */
 .full-width {
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   transition: all 0.3s ease;
 }
 
@@ -77,34 +99,80 @@
   transform: translateY(-1px);
 }
 
-/* Checkbox Section */
-.checkbox-section {
-  margin: 24px 0;
-  padding: 20px;
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
+/* Date and Time Row */
+.date-time-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: flex-start;
+}
+
+.half-width {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
   transition: all 0.3s ease;
 }
 
+.half-width:hover {
+  transform: translateY(-1px);
+}
+
+/* Responsive para fecha y hora */
+@media (max-width: 768px) {
+  .date-time-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .half-width {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+}
+
+/* Checkbox Section */
+.checkbox-section {
+  margin: 16px 0;
+  padding: 18px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1.5px solid rgba(14, 165, 233, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(5px);
+}
+
 .checkbox-section:hover {
-  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-  border-color: #659bb8;
+  background: #f8fafc;
+  border-color: rgba(14, 165, 233, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 16px rgba(14, 165, 233, 0.15),
+    0 0 0 2px rgba(14, 165, 233, 0.1);
+}
+
+.checkbox-hint {
+  color: #6b7280;
+  font-size: 0.85rem;
+  margin: 8px 0 0 0;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 /* Image Upload Section */
 .image-upload-section {
-  margin: 24px 0;
+  margin: 16px 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 24px;
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-  border-radius: 16px;
-  border: 2px dashed #cbd5e1;
-  transition: all 0.3s ease;
+  gap: 16px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 2px dashed rgba(14, 165, 233, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(5px);
 }
 
 .image-upload-section::before {
@@ -114,15 +182,17 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(101, 155, 184, 0.1), transparent);
-  transition: left 0.5s ease;
+  background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.15), transparent);
+  transition: left 0.6s ease;
 }
 
 .image-upload-section:hover {
-  border-color: #659bb8;
-  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(101, 155, 184, 0.15);
+  border-color: rgba(14, 165, 233, 0.5);
+  background: #f8fafc;
+  transform: translateY(-3px);
+  box-shadow: 
+    0 12px 28px rgba(14, 165, 233, 0.2),
+    0 0 0 2px rgba(14, 165, 233, 0.15);
 }
 
 .image-upload-section:hover::before {
@@ -133,28 +203,83 @@
   display: none;
 }
 
+/* Controles de carga de imagen */
+.image-upload-controls {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.image-upload-hint {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Botón de seleccionar imagen */
+.select-image-button {
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%) !important;
+  color: white !important;
+  border-radius: 14px !important;
+  font-weight: 700 !important;
+  padding: 12px 24px !important;
+  box-shadow: 
+    0 4px 12px rgba(14, 165, 233, 0.35),
+    0 0 0 0 rgba(14, 165, 233, 0.4) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  letter-spacing: 0.3px !important;
+  border: none !important;
+  margin-bottom: 0 !important;
+}
+
+.select-image-button:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 
+    0 8px 20px rgba(14, 165, 233, 0.5),
+    0 0 0 4px rgba(14, 165, 233, 0.15) !important;
+}
+
+.select-image-button mat-icon {
+  margin-right: 8px !important;
+}
+
 /* Image Preview */
 .image-preview {
   position: relative;
   display: inline-block;
-  max-width: 350px;
-  border-radius: 16px;
+  max-width: 400px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+  box-shadow: 
+    0 8px 20px rgba(14, 165, 233, 0.15),
+    0 0 0 2px rgba(14, 165, 233, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   margin-top: 16px;
+  border: 2px solid rgba(14, 165, 233, 0.2);
 }
 
 .image-preview:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 
+    0 16px 40px rgba(14, 165, 233, 0.25),
+    0 0 0 3px rgba(14, 165, 233, 0.2);
+  border-color: rgba(14, 165, 233, 0.4);
 }
 
 .preview-image {
   width: 100%;
-  height: 220px;
+  height: 200px;
   object-fit: cover;
   border-radius: 16px;
+  transition: transform 0.4s ease;
+}
+
+.image-preview:hover .preview-image {
+  transform: scale(1.05);
 }
 
 .remove-image-btn {
@@ -180,11 +305,11 @@
 /* Custom Material Design Overrides */
 ::ng-deep .mat-mdc-form-field {
   --mdc-filled-text-field-active-indicator-height: 0px;
-  --mdc-filled-text-field-focus-active-indicator-height: 2px;
-  --mdc-filled-text-field-focus-active-indicator-color: #659bb8;
+  --mdc-filled-text-field-focus-active-indicator-height: 3px;
+  --mdc-filled-text-field-focus-active-indicator-color: #0ea5e9;
   --mdc-filled-text-field-label-text-color: #6b7280;
-  --mdc-filled-text-field-focus-label-text-color: #659bb8;
-  --mdc-filled-text-field-container-shape: 12px;
+  --mdc-filled-text-field-focus-label-text-color: #0ea5e9;
+  --mdc-filled-text-field-container-shape: 14px;
   --mdc-filled-text-field-container-color: #f9fafb;
   margin-bottom: 0;
 }
@@ -201,66 +326,100 @@
 
 ::ng-deep .mat-mdc-form-field.mat-focused {
   --mdc-filled-text-field-container-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
 }
 
 ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-label {
-  color: #659bb8 !important;
+  color: #0ea5e9 !important;
 }
 
 ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-required-marker {
-  color: #659bb8 !important;
+  color: #0ea5e9 !important;
 }
 
 ::ng-deep .mat-mdc-raised-button.mat-primary {
-  background: linear-gradient(135deg, #659bb8, #4a7c95) !important;
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #6366f1 100%) !important;
+  background-size: 200% 200% !important;
+  animation: gradientShift 4s ease infinite !important;
   color: white !important;
   border-radius: 12px !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   text-transform: none !important;
   padding: 12px 24px !important;
-  box-shadow: 0 4px 15px rgba(101, 155, 184, 0.3) !important;
-  transition: all 0.3s ease !important;
+  box-shadow: 
+    0 6px 16px rgba(14, 165, 233, 0.4),
+    0 0 0 0 rgba(14, 165, 233, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  letter-spacing: 0.3px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  font-size: 0.95rem !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-primary::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+  transition: left 0.5s !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-primary:hover::before {
+  left: 100% !important;
 }
 
 ::ng-deep .mat-mdc-raised-button.mat-primary:hover {
-  background: linear-gradient(135deg, #4a7c95, #3b6b8a) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(101, 155, 184, 0.4) !important;
+  background-position: 100% 50% !important;
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 
+    0 10px 24px rgba(14, 165, 233, 0.5),
+    0 0 0 4px rgba(14, 165, 233, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
 }
 
 ::ng-deep .mat-mdc-button {
   border-radius: 12px !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   text-transform: none !important;
   padding: 12px 24px !important;
-  transition: all 0.3s ease !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-size: 0.95rem !important;
 }
 
 ::ng-deep .mat-mdc-button:hover {
-  background-color: rgba(101, 155, 184, 0.08) !important;
+  background-color: rgba(14, 165, 233, 0.1) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(14, 165, 233, 0.15) !important;
 }
 
 ::ng-deep .mat-mdc-checkbox.mat-primary .mat-mdc-checkbox-ripple {
-  background-color: #659bb8 !important;
+  background-color: #0ea5e9 !important;
 }
 
 ::ng-deep .mat-mdc-checkbox.mat-primary .mat-mdc-checkbox-frame {
-  border-color: #659bb8 !important;
+  border-color: #0ea5e9 !important;
 }
 
 ::ng-deep .mat-mdc-checkbox.mat-primary .mat-mdc-checkbox-background {
-  background-color: #659bb8 !important;
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%) !important;
 }
 
 ::ng-deep .mat-mdc-card {
-  border-radius: 20px !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 28px !important;
+  box-shadow: 
+    0 8px 16px rgba(14, 165, 233, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.05) !important;
 }
 
 ::ng-deep .mat-mdc-card-actions {
-  padding: 24px 40px !important;
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
-  border-top: 1px solid #e2e8f0 !important;
+  padding: 20px 28px !important;
+  background: #ffffff !important;
+  border-top: 1.5px solid rgba(14, 165, 233, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
 }
 
 /* Animations */
@@ -286,7 +445,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .form-container {
-    padding: 20px;
+    padding: 20px 16px;
   }
   
   .form-title {

@@ -59,7 +59,7 @@
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>Descripción *</mat-label>
           <textarea matInput formControlName="description" 
-                    rows="4"></textarea>
+                    rows="3"></textarea>
           <mat-error *ngIf="publicationForm.get('description')?.hasError('required')">
             La descripción es requerida
           </mat-error>
@@ -77,13 +77,13 @@
             accept="image/*"
             class="file-input">
           
-          <div style="text-align: center;">
+          <div class="image-upload-controls">
             <button mat-raised-button color="primary" type="button" (click)="selectImage()" 
-                    style="margin-bottom: 16px;">
+                    class="select-image-button">
               <mat-icon>camera_alt</mat-icon>
               Seleccionar imagen
             </button>
-            <p style="color: #6b7280; font-size: 0.9rem; margin: 0;">
+            <p class="image-upload-hint">
               Formatos soportados: JPG, PNG, GIF (máx. 5MB)
             </p>
           </div>
@@ -128,51 +128,57 @@
           <mat-checkbox formControlName="isPublic">
             Hacer pública
           </mat-checkbox>
-          <p style="color: #6b7280; font-size: 0.9rem; margin: 8px 0 0 0;">
+          <p class="checkbox-hint">
             Las publicaciones públicas son visibles para todos los miembros de la comunidad
           </p>
         </div>
 
-        <!-- Fecha programada -->
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Fecha programada *</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="scheduledDate" [required]="true">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="publicationForm.get('scheduledDate')?.hasError('required')">
-            La fecha es requerida
-          </mat-error>
-        </mat-form-field>
+        <!-- Fecha y Hora lado a lado -->
+        <div class="date-time-row">
+          <!-- Fecha programada -->
+          <mat-form-field appearance="fill" class="half-width">
+            <mat-label>Fecha programada *</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="scheduledDate" [required]="true">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="publicationForm.get('scheduledDate')?.hasError('required')">
+              La fecha es requerida
+            </mat-error>
+          </mat-form-field>
 
-        <!-- Hora -->
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Hora *</mat-label>
-          <input matInput type="time" formControlName="time">
-          <mat-error *ngIf="publicationForm.get('time')?.hasError('required')">
-            La hora es requerida
-          </mat-error>
-        </mat-form-field>
+          <!-- Hora -->
+          <mat-form-field appearance="fill" class="half-width">
+            <mat-label>Hora *</mat-label>
+            <input matInput type="time" formControlName="time">
+            <mat-error *ngIf="publicationForm.get('time')?.hasError('required')">
+              La hora es requerida
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-        <!-- Lugar -->
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Lugar *</mat-label>
-          <input matInput formControlName="location">
-          <mat-error *ngIf="publicationForm.get('location')?.hasError('required')">
-            El lugar es requerido
-          </mat-error>
-        </mat-form-field>
+        <!-- Lugar y Cantidad máxima de voluntarios lado a lado -->
+        <div class="date-time-row">
+          <!-- Lugar -->
+          <mat-form-field appearance="fill" class="half-width">
+            <mat-label>Lugar *</mat-label>
+            <input matInput formControlName="location">
+            <mat-error *ngIf="publicationForm.get('location')?.hasError('required')">
+              El lugar es requerido
+            </mat-error>
+          </mat-form-field>
 
-        <!-- Cantidad máxima de voluntarios -->
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Cantidad máxima de voluntarios *</mat-label>
-          <input matInput type="number" formControlName="maxVolunteers" min="1">
-          <mat-error *ngIf="publicationForm.get('maxVolunteers')?.hasError('required')">
-            La cantidad máxima de voluntarios es requerida
-          </mat-error>
-          <mat-error *ngIf="publicationForm.get('maxVolunteers')?.hasError('min')">
-            Debe ser al menos 1 voluntario
-          </mat-error>
-        </mat-form-field>
+          <!-- Cantidad máxima de voluntarios -->
+          <mat-form-field appearance="fill" class="half-width">
+            <mat-label>Cantidad máxima de voluntarios *</mat-label>
+            <input matInput type="number" formControlName="maxVolunteers" min="1">
+            <mat-error *ngIf="publicationForm.get('maxVolunteers')?.hasError('required')">
+              La cantidad máxima de voluntarios es requerida
+            </mat-error>
+            <mat-error *ngIf="publicationForm.get('maxVolunteers')?.hasError('min')">
+              Debe ser al menos 1 voluntario
+            </mat-error>
+          </mat-form-field>
+        </div>
       </form>
     </mat-card-content>
 

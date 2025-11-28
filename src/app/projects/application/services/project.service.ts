@@ -45,6 +45,38 @@ export class ProjectService {
   }
 
   private mapToProject(data: any): Project {
+    // Formatear fecha si viene en formato ISO o timestamp
+    let formattedDate = data.date || '';
+    let formattedTime = data.time || '';
+    
+    // Si la fecha viene en formato ISO, extraer solo la fecha
+    if (data.scheduledDate || data.date) {
+      const dateValue = data.scheduledDate || data.date;
+      if (dateValue) {
+        try {
+          const dateObj = new Date(dateValue);
+          if (!isNaN(dateObj.getTime())) {
+            // Formato: DD/MM/YYYY
+            formattedDate = dateObj.toLocaleDateString('es-ES', { 
+              day: '2-digit', 
+              month: '2-digit', 
+              year: 'numeric' 
+            });
+            // Formato: HH:MM
+            formattedTime = dateObj.toLocaleTimeString('es-ES', { 
+              hour: '2-digit', 
+              minute: '2-digit',
+              hour12: false
+            });
+          }
+        } catch (e) {
+          // Si falla el parseo, usar el valor original
+          formattedDate = data.date || data.scheduledDate || '';
+          formattedTime = data.time || '';
+        }
+      }
+    }
+    
     return new Project(
       data.id,
       data.title,
@@ -53,20 +85,20 @@ export class ProjectService {
       data.organizationId,
       data.organizationName,
       data.organizationLogo,
-      data.date,
-      data.time,
-      data.duration,
-      data.location,
-      data.maxVolunteers,
-      data.currentVolunteers,
-      data.likes,
-      data.isLiked,
-      data.status,
-      data.category,
-      data.tags,
-      data.requirements,
-      data.createdAt,
-      data.updatedAt
+      formattedDate,
+      formattedTime,
+      data.duration || '',
+      data.location || '',
+      data.maxVolunteers || 0,
+      data.currentVolunteers || 0,
+      data.likes || 0,
+      data.isLiked || false,
+      data.status || 'active',
+      data.category || '',
+      data.tags || [],
+      data.requirements || [],
+      data.createdAt || new Date().toISOString(),
+      data.updatedAt || new Date().toISOString()
     );
   }
 

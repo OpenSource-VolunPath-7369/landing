@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../auth/application/services/auth.service';
 import { User } from '../../../interfaces';
 
 @Component({
   selector: 'side-menu-header',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './side-menu-header.component.html',
 
 })
@@ -43,5 +44,13 @@ export class SideMenuHeaderComponent implements OnInit, OnDestroy {
 
   getUserAvatar(): string {
     return this.currentUser?.avatar || 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=128&q=80';
+  }
+
+  getUserType(): string {
+    if (this.isVolunteer()) {
+      return 'Voluntario';
+    } else {
+      return 'Organización';
+    }
   }
 }

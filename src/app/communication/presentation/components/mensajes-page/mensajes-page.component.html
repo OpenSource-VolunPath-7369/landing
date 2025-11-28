@@ -1,7 +1,7 @@
-<div class="min-h-screen bg-gray-50" style="padding: 30px 70px;">
+<div class="mensajes-container min-h-screen bg-gray-50">
   <!-- Título de la sección -->
-  <div class="mb-6">
-    <h1 class="text-3xl font-bold text-gray-900">Mensajes</h1>
+  <div class="mb-6" style="padding-bottom: 20px; border-bottom: 2px solid rgba(14, 165, 233, 0.1);">
+    <h1 class="mensajes-title">Mensajes</h1>
     <div *ngIf="unreadCount > 0" class="mt-2">
       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
         {{ unreadCount }} mensaje{{ unreadCount > 1 ? 's' : '' }} sin leer
@@ -13,9 +13,9 @@
   <div class="mb-6 flex flex-col sm:flex-row gap-3" *ngIf="!showSendForm && !selectedMessage">
     <button 
       (click)="toggleSendForm()" 
-      class="inline-flex items-center justify-center px-5 py-2.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm">
-      <mat-icon class="mr-2" style="font-size: 18px; width: 18px; height: 18px;">send</mat-icon>
-      {{ isVolunteerMode ? 'Enviar a organizaciones' : 'Enviar a voluntarios' }}
+      class="send-message-button">
+      <mat-icon>send</mat-icon>
+      <span>{{ isVolunteerMode ? 'Enviar a organizaciones' : 'Enviar a voluntarios' }}</span>
     </button>
     <button 
       *ngIf="unreadCount > 0"

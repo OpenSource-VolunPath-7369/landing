@@ -64,10 +64,16 @@ export class SideMenuOptionsComponent {
   ];
 
   get menuOptions(): MenuOption[] {
+    let options = this.allMenuOptions;
+    
     if (this.isVolunteer()) {
       // Filtrar opciones que son solo para organizaciones
-      return this.allMenuOptions.filter(option => !option.organizationOnly);
+      options = options.filter(option => !option.organizationOnly);
     }
-    return this.allMenuOptions;
+    
+    // Ocultar Perfil
+    options = options.filter(option => option.route !== 'perfil');
+    
+    return options;
   }
 }

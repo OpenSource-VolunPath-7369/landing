@@ -1,0 +1,300 @@
+/* ============================================
+   VOLUNPATH - IMPROVED COLOR PALETTE & DESIGN
+   ============================================ */
+
+/* CSS Variables - Modern Color Palette */
+:root {
+  /* Primary Colors - Organization (Blue Theme) */
+  --volunpath-blue-50: #e6f2f8;
+  --volunpath-blue-100: #b3d9e8;
+  --volunpath-blue-200: #80c0d8;
+  --volunpath-blue-300: #4da7c8;
+  --volunpath-blue-400: #1a8eb8;  /* Primary */
+  --volunpath-blue-500: #0d7ba3;
+  --volunpath-blue-600: #0a6b8e;
+  --volunpath-blue-700: #085b79;
+  --volunpath-blue-800: #064b64;
+  --volunpath-blue-900: #043b4f;
+
+  /* Primary Colors - Volunteer (Green Theme) */
+  --volunpath-green-50: #f0f9f4;
+  --volunpath-green-100: #d4edda;
+  --volunpath-green-200: #a8dbb5;
+  --volunpath-green-300: #7cc990;
+  --volunpath-green-400: #50b76b;  /* Primary */
+  --volunpath-green-500: #3da55a;
+  --volunpath-green-600: #2a9349;
+  --volunpath-green-700: #1d7a38;
+  --volunpath-green-800: #106127;
+  --volunpath-green-900: #0a4816;
+
+  /* Neutral Colors - Modern Grays */
+  --volunpath-gray-50: #f9fafb;
+  --volunpath-gray-100: #f3f4f6;
+  --volunpath-gray-200: #e5e7eb;
+  --volunpath-gray-300: #d1d5db;
+  --volunpath-gray-400: #9ca3af;
+  --volunpath-gray-500: #6b7280;
+  --volunpath-gray-600: #4b5563;
+  --volunpath-gray-700: #374151;
+  --volunpath-gray-800: #1f2937;
+  --volunpath-gray-900: #111827;
+
+  /* Accent Colors */
+  --volunpath-accent-orange: #f97316;
+  --volunpath-accent-purple: #a855f7;
+  --volunpath-accent-teal: #14b8a6;
+  --volunpath-accent-amber: #f59e0b;
+
+  /* Status Colors */
+  --volunpath-success: #10b981;
+  --volunpath-success-light: #d1fae5;
+  --volunpath-error: #ef4444;
+  --volunpath-error-light: #fee2e2;
+  --volunpath-warning: #f59e0b;
+  --volunpath-warning-light: #fef3c7;
+  --volunpath-info: #3b82f6;
+  --volunpath-info-light: #dbeafe;
+
+  /* Shadows - Modern & Soft */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Gradients */
+  --gradient-blue: linear-gradient(135deg, #1a8eb8 0%, #0d7ba3 50%, #0a6b8e 100%);
+  --gradient-blue-light: linear-gradient(135deg, #4da7c8 0%, #1a8eb8 50%, #0d7ba3 100%);
+  --gradient-green: linear-gradient(135deg, #50b76b 0%, #3da55a 50%, #2a9349 100%);
+  --gradient-green-light: linear-gradient(135deg, #7cc990 0%, #50b76b 50%, #3da55a 100%);
+  --gradient-purple: linear-gradient(135deg, #a855f7 0%, #9333ea 50%, #7e22ce 100%);
+  --gradient-warm: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   GLOBAL IMPROVEMENTS
+   ============================================ */
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better text rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================
+   MATERIAL DESIGN IMPROVEMENTS
+   ============================================ */
+
+/* Primary Color Override */
+.mat-primary {
+  --mdc-theme-primary: var(--volunpath-blue-400);
+}
+
+.mat-accent {
+  --mdc-theme-secondary: var(--volunpath-green-400);
+}
+
+.mat-warn {
+  --mdc-theme-error: var(--volunpath-error);
+}
+
+/* Form Fields - Modern Design */
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-focus-outline-color: var(--volunpath-blue-400);
+  --mdc-outlined-text-field-focus-label-text-color: var(--volunpath-blue-400);
+  --mdc-outlined-text-field-container-shape: var(--radius-md);
+  --mdc-filled-text-field-container-shape: var(--radius-md);
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
+  background-color: rgba(26, 142, 184, 0.04);
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-label {
+  color: var(--volunpath-blue-400) !important;
+}
+
+/* Buttons - Enhanced with Gradients */
+.mat-mdc-raised-button.mat-primary {
+  background: var(--gradient-blue) !important;
+  color: white !important;
+  border-radius: var(--radius-md) !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: all var(--transition-base) !important;
+  letter-spacing: 0.01em;
+}
+
+.mat-mdc-raised-button.mat-primary:hover {
+  background: var(--gradient-blue-light) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.mat-mdc-button {
+  border-radius: var(--radius-md) !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  transition: all var(--transition-base) !important;
+}
+
+.mat-mdc-button:hover {
+  background-color: rgba(26, 142, 184, 0.08) !important;
+}
+
+/* Cards - Modern Shadows */
+.mat-mdc-card {
+  border-radius: var(--radius-xl) !important;
+  box-shadow: var(--shadow-lg) !important;
+  transition: all var(--transition-base) !important;
+  border: 1px solid var(--volunpath-gray-100);
+}
+
+.mat-mdc-card:hover {
+  box-shadow: var(--shadow-xl) !important;
+  transform: translateY(-2px) !important;
+  border-color: var(--volunpath-gray-200);
+}
+
+/* Checkboxes */
+.mat-mdc-checkbox.mat-primary .mat-mdc-checkbox-ripple {
+  background-color: var(--volunpath-blue-400) !important;
+}
+
+.mat-mdc-checkbox.mat-primary .mat-mdc-checkbox-frame {
+  border-color: var(--volunpath-blue-400) !important;
+}
+
+.mat-mdc-checkbox.mat-primary .mat-mdc-checkbox-background {
+  background-color: var(--volunpath-blue-400) !important;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Modern Card Styles */
+.card-modern {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--volunpath-gray-100);
+  transition: all var(--transition-base);
+}
+
+.card-modern:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Modern Button Styles */
+.btn-primary {
+  background: var(--gradient-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 24px;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--gradient-blue-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-success {
+  background: var(--gradient-green);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 24px;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.btn-success:hover {
+  background: var(--gradient-green-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Modern Input Styles */
+.input-modern {
+  border: 2px solid var(--volunpath-gray-200);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  transition: all var(--transition-base);
+  background: white;
+}
+
+.input-modern:focus {
+  outline: none;
+  border-color: var(--volunpath-blue-400);
+  box-shadow: 0 0 0 3px rgba(26, 142, 184, 0.1);
+}
+
+/* Badge Styles */
+.badge-success {
+  background: var(--volunpath-success-light);
+  color: var(--volunpath-success);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-error {
+  background: var(--volunpath-error-light);
+  color: var(--volunpath-error);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-warning {
+  background: var(--volunpath-warning-light);
+  color: var(--volunpath-warning);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-info {
+  background: var(--volunpath-info-light);
+  color: var(--volunpath-info);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+

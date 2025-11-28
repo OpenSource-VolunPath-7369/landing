@@ -44,6 +44,54 @@ export class PublicationService {
   }
 
   private mapToPublication(data: any): Publication {
+    // Formatear fecha si viene en formato ISO o timestamp
+    let formattedDate = data.date || '';
+    let formattedTime = data.time || '';
+    
+    // Si la fecha viene en formato ISO, extraer solo la fecha
+    if (data.scheduledDate || data.date) {
+      const dateValue = data.scheduledDate || data.date;
+      if (dateValue) {
+        try {
+          const dateObj = new Date(dateValue);
+          if (!isNaN(dateObj.getTime())) {
+            // Formato: DD/MM/YYYY
+            formattedDate = dateObj.toLocaleDateString('es-ES', { 
+              day: '2-digit', 
+              month: '2-digit', 
+              year: 'numeric' 
+            });
+            // Formato: HH:MM
+            formattedTime = dateObj.toLocaleTimeString('es-ES', { 
+              hour: '2-digit', 
+              minute: '2-digit',
+              hour12: false
+            });
+          }
+        } catch (e) {
+          // Si falla el parseo, usar el valor original
+          formattedDate = data.date || data.scheduledDate || '';
+          formattedTime = data.time || '';
+        }
+      }
+    }
+    
+    // Si no hay fecha programada, usar createdAt como fallback
+    if (!formattedDate && data.createdAt) {
+      try {
+        const dateObj = new Date(data.createdAt);
+        if (!isNaN(dateObj.getTime())) {
+          formattedDate = dateObj.toLocaleDateString('es-ES', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric' 
+          });
+        }
+      } catch (e) {
+        // Ignorar error
+      }
+    }
+    
     return new Publication(
       data.id,
       data.title,
@@ -51,8 +99,8 @@ export class PublicationService {
       data.image,
       data.organizationId,
       data.likes || 0,
-      data.date || '',
-      data.time || '',
+      formattedDate,
+      formattedTime,
       data.location || '',
       data.maxVolunteers || 0,
       data.currentVolunteers || 0,

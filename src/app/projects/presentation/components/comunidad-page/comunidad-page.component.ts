@@ -38,6 +38,10 @@ export default class ComunidadPageComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   userRegistrations: Map<string, 'pending' | 'confirmed' | 'cancelled'> = new Map();
   
+  // Mensaje de éxito
+  successMessage: string | null = null;
+  showSuccessMessage = false;
+  
   // Mapa para obtener la organización por ID
   organizationsMap: Map<string, Organization> = new Map();
   
@@ -216,16 +220,54 @@ export default class ComunidadPageComponent implements OnInit, OnDestroy {
     console.log('Loading user registrations for volunteer:', this.currentUser?.id);
   }
 
-  registerForProject(project: Project) {
+  registerForPublication(publication: Publication) {
+    // Verificar que el usuario esté autenticado
+    if (!this.currentUser) {
+      alert('Debes iniciar sesión para registrarte');
+      this.router.navigate(['/login']);
+      return;
+    }
+
     // Verificar que el usuario sea voluntario
     if (!this.isVolunteer()) {
       alert('Solo los voluntarios pueden registrarse en actividades');
       return;
     }
 
+    if (this.isRegistered(publication.id)) {
+      alert('Ya estás registrado en esta actividad');
+      return;
+    }
+
+    // Para publicaciones, permitir registro siempre
+    // TODO: Conectar con backend Enrollments bounded context
+    // Por ahora es mock
+    this.userRegistrations.set(publication.id, 'pending');
+    
+    // Mostrar mensaje de éxito
+    this.successMessage = '¡Registrado exitosamente!';
+    this.showSuccessMessage = true;
+    
+    // Ocultar el mensaje después de 3 segundos
+    setTimeout(() => {
+      this.showSuccessMessage = false;
+      this.successMessage = null;
+    }, 3000);
+    
+    console.log('Registration created for publication:', publication.id);
+  }
+
+  registerForProject(project: Project) {
+    // Verificar que el usuario esté autenticado
     if (!this.currentUser) {
       alert('Debes iniciar sesión para registrarte');
       this.router.navigate(['/login']);
+      return;
+    }
+
+    // Verificar que el usuario sea voluntario
+    if (!this.isVolunteer()) {
+      alert('Solo los voluntarios pueden registrarse en actividades');
       return;
     }
 
@@ -234,9 +276,12 @@ export default class ComunidadPageComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Verificar espacios disponibles (pero permitir registro de todas formas)
     if (!project.hasAvailableSpots()) {
-      alert('No hay espacios disponibles');
-      return;
+      const confirm = window.confirm('No hay espacios disponibles. ¿Deseas registrarte en lista de espera?');
+      if (!confirm) {
+        return;
+      }
     }
 
     // TODO: Conectar con backend Enrollments bounded context
@@ -301,7 +346,16 @@ export default class ComunidadPageComponent implements OnInit, OnDestroy {
               });
           }
           
-          alert('Te has registrado exitosamente en la actividad. Espera la confirmación de la organización.');
+          // Mostrar mensaje de éxito
+          this.successMessage = '¡Registrado exitosamente!';
+          this.showSuccessMessage = true;
+          
+          // Ocultar el mensaje después de 3 segundos
+          setTimeout(() => {
+            this.showSuccessMessage = false;
+            this.successMessage = null;
+          }, 3000);
+          
           console.log('Registration created:', registration);
         },
         error: (error) => {

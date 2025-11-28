@@ -27,23 +27,25 @@
   display: flex;
   align-items: center;
   padding: 15px 20px;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  border: 1px solid #e9ecef;
+  background-color: white;
+  border-radius: 16px;
+  border: 1px solid rgba(229, 231, 235, 0.8);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .notification-item:hover {
-  background-color: #e9ecef;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f9fafb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  border-color: rgba(229, 231, 235, 1);
 }
 
 .notification-item.unread {
-  background-color: #f8f9fa;
-  border-left: 4px solid #3b82f6;
+  background: linear-gradient(135deg, #e6f2f8 0%, #f0f9ff 100%);
+  border-left: 4px solid #1a8eb8;
+  font-weight: 600;
 }
 
 .notification-icon {
@@ -63,11 +65,11 @@
 
 .fa-icon {
   font-size: 1.2rem;
-  color: #dc2626;
+  color: #ef4444;
 }
 
 .fa-icon.fa-hand-holding-heart {
-  color: #dc2626;
+  color: #ef4444;
 }
 
 .fa-icon.fa-face-smile {

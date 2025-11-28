@@ -26,19 +26,20 @@
   min-height: 16px;
 }
 
-/* Estilos para modo voluntario (sidebar verde) */
+/* Estilos unificados para todos los usuarios */
 ::ng-deep .language-switcher .mat-button-toggle-checked {
-  background-color: rgba(0, 0, 0, 0.15) !important;
-  color: #1e293b !important;
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  font-weight: 700 !important;
 }
 
 ::ng-deep .language-switcher .mat-button-toggle:not(.mat-button-toggle-checked) {
-  background-color: rgba(255, 255, 255, 0.25) !important;
-  color: #475569 !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
 }
 
 ::ng-deep .language-switcher .mat-button-toggle:hover:not(.mat-button-toggle-checked) {
-  background-color: rgba(255, 255, 255, 0.35) !important;
-  color: #334155 !important;
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  color: white !important;
 }
 

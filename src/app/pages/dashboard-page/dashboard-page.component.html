@@ -54,11 +54,21 @@
           <span class="date-time">{{ publication.date }} {{ publication.time }}</span>
         </div>
         
-        <button 
-          class="delete-button"
-          (click)="deletePublication(publication.id)">
-          Eliminar
-        </button>
+        <div class="publication-actions">
+          <button 
+            class="edit-button"
+            (click)="editPublication(publication.id)"
+            *ngIf="publication.id">
+            <i class="fa-solid fa-pencil"></i>
+            Editar
+          </button>
+          <button 
+            class="delete-button"
+            (click)="deletePublication(publication.id)">
+            <i class="fa-solid fa-trash"></i>
+            Eliminar
+          </button>
+        </div>
       </div>
       
       <div class="publication-caption">
