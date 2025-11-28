@@ -45,7 +45,8 @@ export class VolunteerService {
       data.createdAt || new Date().toISOString(),
       data.bio,
       data.skills || [],
-      data.location
+      data.location,
+      data.userId ? String(data.userId) : undefined // Incluir userId si está presente
     );
   }
 

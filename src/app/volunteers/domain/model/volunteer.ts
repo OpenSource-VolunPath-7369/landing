@@ -36,6 +36,12 @@ export class Volunteer {
   private readonly _role: 'volunteer' | 'organization_admin' | 'admin';
 
   /**
+   * The user ID associated with this volunteer (from IAM context).
+   * @readonly
+   */
+  private readonly _userId?: string;
+
+  /**
    * The date when the volunteer joined.
    * @readonly
    */
@@ -80,7 +86,8 @@ export class Volunteer {
     joinedDate: string,
     bio: string,
     skills: string[],
-    location: string
+    location: string,
+    userId?: string
   ) {
     this._id = id;
     this._name = name;
@@ -91,6 +98,7 @@ export class Volunteer {
     this._bio = bio;
     this._skills = skills;
     this._location = location;
+    this._userId = userId;
   }
 
   /**
@@ -163,6 +171,14 @@ export class Volunteer {
    */
   get location(): string {
     return this._location;
+  }
+
+  /**
+   * Gets the user ID associated with this volunteer.
+   * @returns The user ID, or undefined if not set.
+   */
+  get userId(): string | undefined {
+    return this._userId;
   }
 
   /**

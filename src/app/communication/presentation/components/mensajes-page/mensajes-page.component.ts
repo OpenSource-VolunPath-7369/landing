@@ -199,8 +199,32 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
     
     // Si es una organización, necesitamos buscar también por organizationId
     if (this.isVolunteerMode) {
-      // Para voluntarios, solo buscar por userId
-      this.loadMessagesForUser(userId, [userId]);
+      // Para voluntarios, obtener el userId del voluntario si está disponible
+      // El currentUser.id debería ser el userId, pero verificamos también el volunteer.userId
+      this.volunteerService.getVolunteers()
+        .pipe(
+          takeUntil(this.destroy$),
+          map(volunteers => {
+            // Buscar el voluntario que corresponde al usuario actual
+            const volunteer = volunteers.find(v => 
+              v.userId === userId || v.id === userId || v.email === this.currentUser?.email
+            );
+            // Usar userId del voluntario si está disponible, de lo contrario usar el userId del usuario
+            const actualUserId = volunteer?.userId || userId;
+            console.log('Voluntario encontrado:', volunteer?.name, 'userId:', volunteer?.userId, 'actualUserId:', actualUserId);
+            return actualUserId;
+          })
+        )
+        .subscribe({
+          next: (actualUserId) => {
+            this.loadMessagesForUser(actualUserId, [actualUserId]);
+          },
+          error: (error) => {
+            console.error('Error loading volunteer userId:', error);
+            // Fallback: usar userId del usuario
+            this.loadMessagesForUser(userId, [userId]);
+          }
+        });
     } else {
       // Para organizaciones, buscar por userId Y por organizationId
       this.organizationService.getOrganizations()
@@ -589,11 +613,19 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
             
             if (!recipient) return;
 
+            // Para voluntarios, usar userId si está disponible, de lo contrario usar id
+            let actualRecipientId = recipientId;
+            if (!this.isVolunteerMode) {
+              // Si el destinatario es un voluntario, usar userId si está disponible
+              const volunteerRecipient = recipient as Volunteer;
+              actualRecipientId = volunteerRecipient.userId || volunteerRecipient.id;
+            }
+            
             const messageData: any = {
               senderId: senderId,
               senderName: senderName,
               senderIcon: senderIcon,
-              recipientId: recipientId,
+              recipientId: actualRecipientId, // Usar userId del voluntario si está disponible
               content: messageContent,
               type: 'general',
               senderOrganization: senderOrganization // Incluir el nombre de la organización si existe
@@ -659,23 +691,25 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
                 );
               notificationObservables.push(notificationObservable);
             } else {
-              // Si el destinatario es un voluntario, usar el recipientId directamente
-              // El recipientId debería ser el userId del voluntario
-              // Asegurarse de que el recipientId sea el id del voluntario (que es el userId)
+              // Si el destinatario es un voluntario, usar el userId del voluntario
+              // El backend necesita el userId del usuario, no el id del voluntario
               const volunteerRecipient = recipient as Volunteer;
-              const volunteerUserId = volunteerRecipient.id; // El id del voluntario es su userId
+              // Usar userId si está disponible, de lo contrario usar id como fallback
+              const volunteerUserId = volunteerRecipient.userId || volunteerRecipient.id;
               
               console.log('Creating notification for volunteer:', {
                 recipientId: recipientId,
+                volunteerId: volunteerRecipient.id,
                 volunteerUserId: volunteerUserId,
                 recipientName: recipient.name,
-                recipientType: recipient.constructor.name,
-                volunteerId: volunteerRecipient.id
+                recipientType: recipient.constructor.name
               });
               
+              // El backend ya crea la notificación automáticamente, pero creamos una aquí también
+              // para asegurar que se cree (aunque el backend debería hacerlo)
               notificationObservables.push(
                 this.notificationService.createNotification({
-                  userId: String(volunteerUserId), // Asegurar que sea string y usar el id del voluntario
+                  userId: String(volunteerUserId), // Usar userId del voluntario
                   title: 'Nuevo mensaje',
                   message: `${senderName}${senderOrganization ? ` (${senderOrganization})` : ''} te envió un mensaje: ${formData.subject}`,
                   type: 'new_message' as const,
@@ -685,9 +719,7 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
                     console.log('✅ Notification created successfully for volunteer:', {
                       notificationId: createdNotification.id,
                       userId: createdNotification.userId,
-                      userIdType: typeof createdNotification.userId,
                       volunteerUserId: volunteerUserId,
-                      volunteerUserIdType: typeof volunteerUserId,
                       title: createdNotification.title
                     });
                   }),
