@@ -306,8 +306,9 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
   }
 
   private loadMessagesForUser(userId: string, recipientIds: string[], organizationId?: string) {
-    // Luego suscribirse a los mensajes actualizados
-    this.messageService.getMessages()
+    // Obtener mensajes del backend usando getMessagesByUserId
+    // Esto asegura que obtenemos los mensajes más recientes
+    this.messageService.getMessagesByUserId(userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (allMessages) => {
@@ -413,13 +414,15 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
 
     // Load unread count (solo mensajes recibidos)
     // Para organizaciones, contar mensajes recibidos por cualquiera de los IDs
-    this.messageService.getMessages()
+    this.messageService.getMessagesByUserId(userId)
       .pipe(
         takeUntil(this.destroy$),
         map(messages => {
-          const unreadMessages = messages.filter(msg => 
-            recipientIds.includes(msg.recipientId) && msg.isUnread()
-          );
+          const unreadMessages = messages.filter(msg => {
+            const msgRecipientId = String(msg.recipientId);
+            const normalizedRecipientIds = recipientIds.map(id => String(id));
+            return normalizedRecipientIds.includes(msgRecipientId) && msg.isUnread();
+          });
           return unreadMessages.length;
         })
       )
