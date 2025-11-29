@@ -16,7 +16,7 @@ import { OrganizationService } from '../../../../organizations/application/servi
 import { Organization } from '../../../../organizations/domain/model/organization';
 import { User } from '../../../../interfaces';
 import { of } from 'rxjs';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { switchMap, catchError, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register-page',
@@ -228,19 +228,73 @@ export default class RegisterPageComponent {
     this.apiService.post<any>('authentication/sign-up', signUpRequest)
       .pipe(
         switchMap((userResponse) => {
-          // Después de crear el usuario, crear el perfil de voluntario
-          const volunteerData = {
-            name: formData.name,
-            email: formData.email,
-            avatar: avatar,
-            bio: formData.bio || 'Voluntario comprometido con causas sociales y ambientales',
-            location: formData.location,
-            userId: userResponse.id,
-            skills: skillsArray
-          };
-          
-          return this.apiService.post<any>('volunteers', volunteerData).pipe(
-            map(() => userResponse) // Retornar el usuario creado
+          // El backend ahora crea automáticamente el registro de voluntario cuando se crea el usuario
+          // Solo intentar crear/actualizar el voluntario si el backend no lo creó automáticamente
+          // Primero verificar si el voluntario ya existe
+          return this.apiService.get<any>(`volunteers/user/${userResponse.id}`).pipe(
+            switchMap((existingVolunteer) => {
+              // Si el voluntario ya existe (creado automáticamente por el backend), actualizarlo con datos adicionales
+              if (existingVolunteer) {
+                const updateData = {
+                  bio: formData.bio || 'Voluntario comprometido con causas sociales y ambientales',
+                  location: formData.location,
+                  skills: skillsArray
+                };
+                return this.apiService.put<any>(`volunteers/${existingVolunteer.id}`, updateData).pipe(
+                  map(() => userResponse)
+                );
+              } else {
+                // Si no existe, crearlo (caso raro, pero por si acaso)
+                const volunteerData = {
+                  name: formData.name,
+                  email: formData.email,
+                  avatar: avatar,
+                  bio: formData.bio || 'Voluntario comprometido con causas sociales y ambientales',
+                  location: formData.location,
+                  userId: userResponse.id,
+                  skills: skillsArray
+                };
+                return this.apiService.post<any>('volunteers', volunteerData).pipe(
+                  catchError((error) => {
+                    // Si falla porque ya existe (creado entre tanto), ignorar el error
+                    if (error.error?.message?.includes('already exists')) {
+                      console.log('Volunteer already exists, continuing with registration');
+                      return of(userResponse);
+                    }
+                    throw error;
+                  }),
+                  map(() => userResponse)
+                );
+              }
+            }),
+            catchError((error) => {
+              // Si no se puede obtener el voluntario, intentar crearlo
+              if (error.status === 404) {
+                const volunteerData = {
+                  name: formData.name,
+                  email: formData.email,
+                  avatar: avatar,
+                  bio: formData.bio || 'Voluntario comprometido con causas sociales y ambientales',
+                  location: formData.location,
+                  userId: userResponse.id,
+                  skills: skillsArray
+                };
+                return this.apiService.post<any>('volunteers', volunteerData).pipe(
+                  catchError((createError) => {
+                    // Si falla porque ya existe, ignorar el error y continuar
+                    if (createError.error?.message?.includes('already exists')) {
+                      console.log('Volunteer already exists, continuing with registration');
+                      return of(userResponse);
+                    }
+                    throw createError;
+                  }),
+                  map(() => userResponse)
+                );
+              }
+              // Si es otro error, ignorarlo y continuar (el backend ya creó el voluntario)
+              console.warn('Error checking/creating volunteer, but continuing with registration:', error);
+              return of(userResponse);
+            })
           );
         }),
         catchError((error) => {
