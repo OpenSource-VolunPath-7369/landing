@@ -376,32 +376,29 @@ export default class MensajesPageComponent implements OnInit, OnDestroy {
             content: m.content.substring(0, 50)
           })));
           
-          // Mostrar mensajes recibidos Y enviados por el usuario actual
-          // Incluir mensajes donde el usuario es recipient (usando cualquiera de los IDs) o sender
-          this.messages = uniqueMessages.filter(msg => {
+          // El backend ya filtra correctamente los mensajes por userId, volunteer.id, y organization.id
+          // Por lo tanto, todos los mensajes que devuelve el backend son relevantes para el usuario actual
+          // Solo necesitamos eliminar duplicados (ya hecho) y mostrar todos los mensajes
+          this.messages = uniqueMessages;
+          
+          // Log para debugging - verificar que todos los mensajes son relevantes
+          const uniqueIdsStrings = uniqueIds.map(id => String(id));
+          const irrelevantMessages = uniqueMessages.filter(msg => {
             const msgRecipientId = String(msg.recipientId);
             const msgSenderId = String(msg.senderId);
-            // Incluir si el mensaje es para el usuario (recipient) o del usuario (sender)
-            const uniqueIdsStrings = uniqueIds.map(id => String(id));
             const isRecipient = normalizedRecipientIds.includes(msgRecipientId) || uniqueIdsStrings.includes(msgRecipientId);
             const isSender = uniqueIdsStrings.includes(msgSenderId);
-            
-            // Log para debugging
-            if (!isRecipient && !isSender) {
-              console.log('⚠️ Mensaje excluido:', {
-                id: msg.id,
-                senderId: msgSenderId,
-                recipientId: msgRecipientId,
-                normalizedUserId: normalizedUserId,
-                normalizedRecipientIds: normalizedRecipientIds,
-                uniqueIds: uniqueIds,
-                isRecipient: isRecipient,
-                isSender: isSender
-              });
-            }
-            
-            return isRecipient || isSender;
+            return !isRecipient && !isSender;
           });
+          
+          if (irrelevantMessages.length > 0) {
+            console.warn('⚠️ Mensajes que no deberían estar aquí (el backend debería haberlos filtrado):', irrelevantMessages.map(m => ({
+              id: m.id,
+              senderId: m.senderId,
+              recipientId: m.recipientId,
+              senderName: m.senderName
+            })));
+          }
           
           // Debug: mostrar todos los mensajes y sus recipientIds
           console.log('=== DEBUG MENSAJES ===');
