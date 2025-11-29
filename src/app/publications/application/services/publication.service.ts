@@ -44,35 +44,33 @@ export class PublicationService {
   }
 
   private mapToPublication(data: any): Publication {
-    // Formatear fecha si viene en formato ISO o timestamp
-    let formattedDate = data.date || '';
-    let formattedTime = data.time || '';
+    // El backend devuelve scheduledDate y scheduledTime
+    // Formatear fecha si viene en formato ISO o YYYY-MM-DD
+    let formattedDate = data.scheduledDate || data.date || '';
+    let formattedTime = data.scheduledTime || data.time || '';
     
-    // Si la fecha viene en formato ISO, extraer solo la fecha
-    if (data.scheduledDate || data.date) {
-      const dateValue = data.scheduledDate || data.date;
-      if (dateValue) {
-        try {
-          const dateObj = new Date(dateValue);
-          if (!isNaN(dateObj.getTime())) {
-            // Formato: DD/MM/YYYY
-            formattedDate = dateObj.toLocaleDateString('es-ES', { 
-              day: '2-digit', 
-              month: '2-digit', 
-              year: 'numeric' 
-            });
-            // Formato: HH:MM
-            formattedTime = dateObj.toLocaleTimeString('es-ES', { 
-              hour: '2-digit', 
-              minute: '2-digit',
-              hour12: false
-            });
-          }
-        } catch (e) {
-          // Si falla el parseo, usar el valor original
-          formattedDate = data.date || data.scheduledDate || '';
-          formattedTime = data.time || '';
+    // Si la fecha viene en formato YYYY-MM-DD, formatearla a DD/MM/YYYY
+    if (formattedDate && formattedDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      try {
+        const [year, month, day] = formattedDate.split('-');
+        formattedDate = `${day}/${month}/${year}`;
+      } catch (e) {
+        // Si falla, usar el valor original
+        console.warn('Error formatting date:', formattedDate);
+      }
+    } else if (formattedDate && formattedDate.includes('T')) {
+      // Si viene en formato ISO, extraer solo la fecha
+      try {
+        const dateObj = new Date(formattedDate);
+        if (!isNaN(dateObj.getTime())) {
+          formattedDate = dateObj.toLocaleDateString('es-ES', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric' 
+          });
         }
+      } catch (e) {
+        console.warn('Error parsing ISO date:', formattedDate);
       }
     }
     
@@ -92,12 +90,38 @@ export class PublicationService {
       }
     }
     
+    // El tiempo viene directamente del backend en formato HH:MM
+    // Si no viene, intentar extraerlo de createdAt
+    if (!formattedTime && data.createdAt) {
+      try {
+        const dateObj = new Date(data.createdAt);
+        if (!isNaN(dateObj.getTime())) {
+          formattedTime = dateObj.toLocaleTimeString('es-ES', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: false
+          });
+        }
+      } catch (e) {
+        // Ignorar error
+      }
+    }
+    
+    console.log('Mapping publication:', {
+      id: data.id,
+      scheduledDate: data.scheduledDate,
+      scheduledTime: data.scheduledTime,
+      formattedDate,
+      formattedTime,
+      location: data.location
+    });
+    
     return new Publication(
-      data.id,
+      String(data.id),
       data.title,
       data.description,
       data.image,
-      data.organizationId,
+      String(data.organizationId),
       data.likes || 0,
       formattedDate,
       formattedTime,

@@ -224,13 +224,23 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
         return;
       }
 
+      // Preparar fecha en formato YYYY-MM-DD
+      let scheduledDateStr = '';
+      if (formData.scheduledDate) {
+        const scheduledDate = new Date(formData.scheduledDate);
+        scheduledDateStr = scheduledDate.toISOString().split('T')[0]; // YYYY-MM-DD
+      } else if (!this.isEditMode) {
+        scheduledDateStr = new Date().toISOString().split('T')[0];
+      }
+
       const publicationData: any = {
         title: formData.title,
         description: formData.description,
         organizationId: formData.organizationId,
         tags: formData.tags ? formData.tags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag.length > 0) : [],
         image: this.imagePreview || '/assets/img-ecologico.png',
-        time: formData.time,
+        scheduledDate: scheduledDateStr, // Backend espera scheduledDate
+        scheduledTime: formData.time, // Backend espera scheduledTime
         location: formData.location,
         maxVolunteers: parseInt(formData.maxVolunteers) || 0,
         currentVolunteers: 0, // Iniciar en 0 para nuevas publicaciones
@@ -241,22 +251,10 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
       if (!this.isEditMode) {
         publicationData.status = 'published';
         publicationData.likes = 0;
-        // Usar la fecha programada si está disponible, sino usar la fecha actual
-        if (formData.scheduledDate) {
-          const scheduledDate = new Date(formData.scheduledDate);
-          publicationData.date = scheduledDate.toISOString().split('T')[0];
-        } else {
-          publicationData.date = new Date().toISOString().split('T')[0];
-        }
         publicationData.createdAt = new Date().toISOString();
       } else {
         // En modo edición, mantener el status actual si no se especifica
         publicationData.status = formData.status || 'published';
-        // Actualizar la fecha si se cambió
-        if (formData.scheduledDate) {
-          const scheduledDate = new Date(formData.scheduledDate);
-          publicationData.date = scheduledDate.toISOString().split('T')[0];
-        }
       }
 
       console.log('Datos de publicación a enviar:', publicationData);
