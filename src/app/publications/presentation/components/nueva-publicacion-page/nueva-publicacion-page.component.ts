@@ -233,14 +233,45 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
         scheduledDateStr = new Date().toISOString().split('T')[0];
       }
 
+      // Preparar fecha y hora correctamente
+      let dateStr = '';
+      let timeStr = formData.time || '';
+      
+      if (formData.scheduledDate) {
+        // Si es un objeto Date, convertirlo a string YYYY-MM-DD
+        if (formData.scheduledDate instanceof Date) {
+          dateStr = formData.scheduledDate.toISOString().split('T')[0];
+        } else if (typeof formData.scheduledDate === 'string') {
+          // Si ya es string, verificar formato
+          if (formData.scheduledDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            dateStr = formData.scheduledDate;
+          } else if (formData.scheduledDate.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+            // Convertir DD/MM/YYYY a YYYY-MM-DD
+            const [day, month, year] = formData.scheduledDate.split('/');
+            dateStr = `${year}-${month}-${day}`;
+          } else {
+            // Intentar parsear como ISO
+            try {
+              const dateObj = new Date(formData.scheduledDate);
+              dateStr = dateObj.toISOString().split('T')[0];
+            } catch (e) {
+              console.warn('Error parsing date:', formData.scheduledDate);
+            }
+          }
+        }
+      } else if (!this.isEditMode) {
+        // Si no hay fecha y es creación nueva, usar fecha actual
+        dateStr = new Date().toISOString().split('T')[0];
+      }
+
       const publicationData: any = {
         title: formData.title,
         description: formData.description,
         organizationId: formData.organizationId,
         tags: formData.tags ? formData.tags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag.length > 0) : [],
         image: this.imagePreview || '/assets/img-ecologico.png',
-        scheduledDate: scheduledDateStr, // Backend espera scheduledDate
-        scheduledTime: formData.time, // Backend espera scheduledTime
+        date: dateStr, // Para el servicio, usar 'date' que luego se convertirá a scheduledDate
+        time: timeStr, // Para el servicio, usar 'time' que luego se convertirá a scheduledTime
         location: formData.location,
         maxVolunteers: parseInt(formData.maxVolunteers) || 0,
         currentVolunteers: 0, // Iniciar en 0 para nuevas publicaciones
@@ -256,6 +287,14 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
         // En modo edición, mantener el status actual si no se especifica
         publicationData.status = formData.status || 'published';
       }
+      
+      console.log('Publication data prepared:', {
+        dateStr,
+        timeStr,
+        scheduledDate: formData.scheduledDate,
+        time: formData.time,
+        publicationData
+      });
 
       console.log('Datos de publicación a enviar:', publicationData);
 

@@ -175,36 +175,79 @@ export class PublicationService {
   }
 
   updatePublication(id: string, publicationData: Partial<Publication>): Observable<Publication> {
-    // Primero obtener la publicación actual para preservar todos los campos
-    return this.getPublicationById(id).pipe(
-      switchMap(currentPub => {
-        // Hacer merge de los datos actuales con los nuevos datos
-        const updatedPublication = {
-          id: currentPub.id,
-          title: publicationData.title ?? currentPub.title,
-          description: publicationData.description ?? currentPub.description,
-          image: publicationData.image ?? currentPub.image,
-          organizationId: publicationData.organizationId ?? currentPub.organizationId,
-          likes: publicationData.likes ?? currentPub.likes,
-          date: publicationData.date ?? currentPub.date,
-          time: publicationData.time ?? currentPub.time,
-          location: publicationData.location ?? currentPub.location,
-          maxVolunteers: publicationData.maxVolunteers ?? currentPub.maxVolunteers,
-          currentVolunteers: publicationData.currentVolunteers ?? currentPub.currentVolunteers,
-          status: publicationData.status ? this.mapFrontendPublicationStatusToBackend(publicationData.status) : currentPub.status,
-          tags: publicationData.tags ?? currentPub.tags,
-          createdAt: currentPub.createdAt,
-          updatedAt: new Date().toISOString()
-        };
+    // Convertir fecha y hora del frontend al formato del backend
+    let scheduledDate = '';
+    if (publicationData.date) {
+      // Si viene en formato DD/MM/YYYY, convertir a YYYY-MM-DD
+      if (typeof publicationData.date === 'string' && publicationData.date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+        const [day, month, year] = publicationData.date.split('/');
+        scheduledDate = `${year}-${month}-${day}`;
+      } else if (typeof publicationData.date === 'string' && publicationData.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        // Ya está en formato YYYY-MM-DD
+        scheduledDate = publicationData.date;
+      } else if (publicationData.date instanceof Date) {
+        // Si es un objeto Date, convertirlo a YYYY-MM-DD
+        scheduledDate = publicationData.date.toISOString().split('T')[0];
+      } else {
+        // Intentar parsear como string
+        try {
+          const dateObj = new Date(publicationData.date as any);
+          if (!isNaN(dateObj.getTime())) {
+            scheduledDate = dateObj.toISOString().split('T')[0];
+          }
+        } catch (e) {
+          console.warn('Error parsing date:', publicationData.date);
+        }
+      }
+    }
+    
+    // La hora debe venir como string en formato HH:MM
+    const scheduledTime = publicationData.time || '';
+    
+    // Preparar datos para el backend
+    const updateData: any = {
+      title: publicationData.title,
+      description: publicationData.description,
+      image: publicationData.image,
+      organizationId: publicationData.organizationId ? Number(publicationData.organizationId) : undefined,
+      tags: publicationData.tags,
+      status: publicationData.status ? this.mapFrontendPublicationStatusToBackend(publicationData.status) : undefined,
+      location: publicationData.location,
+      maxVolunteers: publicationData.maxVolunteers,
+      currentVolunteers: publicationData.currentVolunteers
+    };
+    
+    // Solo agregar scheduledDate y scheduledTime si tienen valores
+    if (scheduledDate) {
+      updateData.scheduledDate = scheduledDate;
+    }
+    if (scheduledTime) {
+      updateData.scheduledTime = scheduledTime;
+    }
+    
+    // Eliminar campos undefined
+    Object.keys(updateData).forEach(key => {
+      if (updateData[key] === undefined) {
+        delete updateData[key];
+      }
+    });
 
-        return this.apiService.put<any>(`publications/${id}`, updatedPublication).pipe(
-          map(pub => this.mapToPublication(pub)),
-          tap(updatedPub => {
-            const currentPublications = this.publicationsSubject.value;
-            this.publicationsSubject.next(
-              currentPublications.map(p => p.id === id ? updatedPub : p)
-            );
-          })
+    console.log('Updating publication with data:', { 
+      id, 
+      originalDate: publicationData.date,
+      originalTime: publicationData.time,
+      scheduledDate,
+      scheduledTime,
+      updateData 
+    });
+
+    return this.apiService.put<any>(`publications/${id}`, updateData).pipe(
+      map(pub => this.mapToPublication(pub)),
+      tap(updatedPub => {
+        console.log('Publication updated successfully:', updatedPub);
+        const currentPublications = this.publicationsSubject.value;
+        this.publicationsSubject.next(
+          currentPublications.map(p => p.id === id ? updatedPub : p)
         );
       })
     );
