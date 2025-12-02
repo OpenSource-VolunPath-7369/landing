@@ -479,8 +479,8 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
       // Set selected date to midnight for accurate comparison
       selectedDate.setHours(0, 0, 0, 0);
       
-      // Check if selected date is before or equal to today
-      if (selectedDate <= today) {
+      // Check if selected date is before today (allow today and future dates)
+      if (selectedDate < today) {
         return { pastDate: true };
       }
       

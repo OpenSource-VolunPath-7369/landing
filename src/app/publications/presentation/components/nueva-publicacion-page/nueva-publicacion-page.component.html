@@ -145,7 +145,7 @@
               {{ 'publication.dateRequired' | translate }}
             </mat-error>
             <mat-error *ngIf="publicationForm.get('scheduledDate')?.hasError('pastDate')">
-              La fecha debe ser mayor a la actual
+              La fecha debe ser mayor o igual a la actual
             </mat-error>
           </mat-form-field>
 
