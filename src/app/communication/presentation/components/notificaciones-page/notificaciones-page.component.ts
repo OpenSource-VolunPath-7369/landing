@@ -18,7 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 /**
  * Notifications page component.
@@ -65,7 +65,8 @@ export default class NotificacionesPageComponent implements OnInit, OnDestroy {
     private organizationService: OrganizationService,
     private apiService: ApiService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private translate: TranslateService
   ) {
     this.replyForm = this.fb.group({
       content: ['', [Validators.required, Validators.minLength(1)]]
@@ -264,6 +265,67 @@ export default class NotificacionesPageComponent implements OnInit, OnDestroy {
       // Navegar a comunidad para nuevas actividades
       this.router.navigate(['/comunidad']);
     }
+  }
+
+  /**
+   * Get translated notification title
+   */
+  getTranslatedTitle(notification: Notification): string {
+    // Si el título ya contiene "Nuevo mensaje", reemplazarlo con la traducción
+    const originalTitle = notification.title;
+    
+    if (notification.type === 'new_message') {
+      // Si el título es "Nuevo mensaje" o contiene "Nuevo mensaje", traducirlo
+      if (originalTitle.includes('Nuevo mensaje') || originalTitle === 'Nuevo mensaje') {
+        return this.translate.instant('notifications.types.newMessage');
+      }
+      return this.translate.instant('notifications.types.newMessage');
+    } else if (notification.type === 'new_activity') {
+      return this.translate.instant('notifications.types.newActivity');
+    } else if (notification.type === 'activity_confirmed') {
+      return this.translate.instant('notifications.types.activityConfirmed');
+    } else if (notification.type === 'activity_cancelled') {
+      return this.translate.instant('notifications.types.activityCancelled');
+    }
+    
+    // Si el título original contiene "Nuevo mensaje", reemplazarlo
+    if (originalTitle.includes('Nuevo mensaje')) {
+      return originalTitle.replace('Nuevo mensaje', this.translate.instant('notifications.types.newMessage'));
+    }
+    
+    return originalTitle || this.translate.instant('notifications.types.general');
+  }
+
+  /**
+   * Get translated notification message
+   */
+  getTranslatedMessage(notification: Notification): string {
+    const originalMessage = notification.message;
+    
+    // Si el mensaje contiene "Nuevo mensaje", traducirlo
+    if (notification.type === 'new_message' || originalMessage.includes('Nuevo mensaje')) {
+      let translatedMessage = originalMessage;
+      
+      // Reemplazar "Nuevo mensaje" con la traducción
+      translatedMessage = translatedMessage.replace(/Nuevo mensaje/g, this.translate.instant('notifications.types.newMessage'));
+      
+      // Reemplazar " te envió un mensaje:" o " te envió un mensaje " con la traducción
+      translatedMessage = translatedMessage.replace(/ te envió un mensaje:/g, ' ' + this.translate.instant('notifications.sentYouMessage') + ':');
+      translatedMessage = translatedMessage.replace(/ te envió un mensaje /g, ' ' + this.translate.instant('notifications.sentYouMessage') + ' ');
+      
+      // Si el mensaje comienza con "Nuevo mensaje de ", reemplazarlo
+      if (translatedMessage.startsWith(this.translate.instant('notifications.types.newMessage') + ' de ')) {
+        translatedMessage = translatedMessage.replace(
+          this.translate.instant('notifications.types.newMessage') + ' de ',
+          this.translate.instant('notifications.newMessageFrom') + ' '
+        );
+      }
+      
+      return translatedMessage;
+    }
+    
+    // Para otros tipos, devolver el mensaje original
+    return originalMessage;
   }
 
   /**

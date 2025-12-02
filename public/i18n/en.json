@@ -284,11 +284,17 @@
     "contactWhatsApp": "Contact support via WhatsApp",
     "faqs": {
       "q1": "Where do I find the tasks and roles assigned within my volunteering?",
+      "a1": "You can find the assigned tasks and roles in the \"Dashboard\" section of your profile. There you will see a summary of all pending activities and responsibilities assigned to you.",
       "q2": "How does the dashboard options bar work?",
+      "a2": "The dashboard options bar allows you to quickly navigate between the different sections of the platform. Each option takes you to a specific functionality such as messages, notifications, profile, etc.",
       "q3": "How can I quickly access my direct messages?",
+      "a3": "You can access your direct messages by clicking on the messages icon in the sidebar or by navigating directly to the \"Messages\" section from the main menu.",
       "q4": "Does the notification system allow me to filter between activities, messages, and project alerts?",
+      "a4": "Yes, the notification system includes filters that allow you to organize and view only the type of notifications that interest you: activities, messages, project alerts, etc.",
       "q5": "Where and how can I edit my profile information?",
-      "q6": "How is the Community section organized and what can I do there?"
+      "a5": "To edit your profile information, go to the \"Profile\" section and click on the \"Edit profile information\" button. There you can update all your personal and organization data.",
+      "q6": "How is the Community section organized and what can I do there?",
+      "a6": "The Community section is organized by volunteering categories and allows you to connect with other volunteers, view available projects, participate in discussions, and collaborate on social initiatives."
     }
   },
   "organization": {
