@@ -5,10 +5,11 @@ import { SideMenuHeaderComponent } from './side-menu-header/side-menu-header.com
 import { SideMenuOptionsComponent } from './side-menu-options/side-menu-options.component';
 import { AuthService } from '../../auth/application/services/auth.service';
 import { LanguageSwitcherComponent } from '../../shared/presentation/components/language-switcher/language-switcher.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'side-menu',
-  imports: [CommonModule, SideMenuHeaderComponent, SideMenuOptionsComponent, LanguageSwitcherComponent],
+  imports: [CommonModule, SideMenuHeaderComponent, SideMenuOptionsComponent, LanguageSwitcherComponent, TranslatePipe],
   templateUrl: './side-menu.component.html',
 })
 export class SideMenuComponent {
@@ -26,6 +27,7 @@ export class SideMenuComponent {
   }
 
   onLogout() {
+    // Note: Using hardcoded text for confirm dialog - could be improved with translation service
     if (confirm('¿Estás seguro de que deseas salir?')) {
       // Usar AuthService para cerrar sesión
       this.authService.logout();

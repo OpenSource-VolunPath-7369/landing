@@ -8,6 +8,7 @@ import { Publication } from '../../../domain/model/publication';
 import { AuthService } from '../../../../auth/application/services/auth.service';
 import { OrganizationService } from '../../../../organizations/application/services/organization.service';
 import { User } from '../../../../interfaces';
+import { TranslatePipe } from '@ngx-translate/core';
 
 /**
  * Dashboard component for managing publications.
@@ -18,7 +19,7 @@ import { User } from '../../../../interfaces';
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './dashboard-page.component.html',
   styleUrls: ['./dashboard-page.component.css']
 })
@@ -110,7 +111,7 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
             this.loading = false;
           },
           error: (error) => {
-            this.error = 'Error al cargar las publicaciones';
+            this.error = 'Error loading publications';
             this.loading = false;
             console.error('Error loading publications:', error);
           }
@@ -125,7 +126,7 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
             this.loading = false;
           },
           error: (error) => {
-            this.error = 'Error al cargar las publicaciones';
+            this.error = 'Error loading publications';
             this.loading = false;
             console.error('Error loading publications:', error);
           }
@@ -137,6 +138,7 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
     const publication = this.publications.find(p => p.id === publicationId);
     const publicationTitle = publication?.title || 'esta publicación';
     
+    // Note: Using hardcoded text for confirm dialog - could be improved with translation service
     if (confirm(`¿Estás seguro de que quieres eliminar "${publicationTitle}"?\n\nEsta acción no se puede deshacer.`)) {
       console.log('Eliminando publicación:', publicationId);
       

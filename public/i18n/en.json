@@ -2,6 +2,11 @@
   "app": {
     "title": "Volunpath"
   },
+  "header": {
+    "welcome": "WELCOME",
+    "organization": "Organization",
+    "volunteer": "Volunteer"
+  },
   "community": {
     "title": "Community",
     "organizations": "Organizations",
@@ -25,6 +30,20 @@
     "receiveNotifications": "Receive notifications",
     "configureProfile": "Configure your profile",
     "resolveDoubts": "Resolve your doubts"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "newPublication": "New Publication",
+    "edit": "Edit",
+    "delete": "Delete",
+    "published": "published",
+    "draft": "draft",
+    "archived": "archived",
+    "likes": "Likes",
+    "confirmDelete": "Are you sure you want to delete",
+    "confirmDeleteEnd": "This action cannot be undone.",
+    "errorLoading": "Error loading publications",
+    "errorDeleting": "Error deleting publication"
   },
   "common": {
     "loading": "Loading...",

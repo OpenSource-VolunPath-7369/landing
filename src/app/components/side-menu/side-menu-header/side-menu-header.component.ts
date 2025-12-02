@@ -4,10 +4,11 @@ import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../auth/application/services/auth.service';
 import { User } from '../../../interfaces';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'side-menu-header',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './side-menu-header.component.html',
 
 })
@@ -48,9 +49,9 @@ export class SideMenuHeaderComponent implements OnInit, OnDestroy {
 
   getUserType(): string {
     if (this.isVolunteer()) {
-      return 'Voluntario';
+      return 'header.volunteer';
     } else {
-      return 'Organización';
+      return 'header.organization';
     }
   }
 }

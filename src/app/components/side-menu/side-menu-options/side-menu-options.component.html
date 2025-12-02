@@ -12,8 +12,8 @@
       <i [class]="item.icon + ' text-xl w-5 text-center text-white group-hover:text-white transition-all duration-300 group-hover:scale-110'"></i>
     </div>
     <div class="flex flex-col flex-1 min-w-0">
-      <span class="text-base font-bold leading-5 text-white group-hover:text-white transition-all duration-300">{{item.label}}</span>
-      <span class="text-xs text-white/80 mt-0.5 hidden md:block truncate">{{item.subLabel}}</span>
+      <span class="text-base font-bold leading-5 text-white group-hover:text-white transition-all duration-300">{{ item.labelKey | translate }}</span>
+      <span class="text-xs text-white/80 mt-0.5 hidden md:block truncate">{{ item.subLabelKey | translate }}</span>
     </div>
     <div class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1">
       <i class="fa-solid fa-chevron-right text-xs text-white"></i>

@@ -12,7 +12,7 @@
             </div>
            </div>
            <div id="profile" class="px-6 py-5 border-b border-white/20">
-            <p class="text-xs text-white/80 mb-3 font-bold uppercase tracking-wider">Bienvenido</p>
+            <p class="text-xs text-white/80 mb-3 font-bold uppercase tracking-wider">{{ 'header.welcome' | translate }}</p>
             <a [routerLink]="['/perfil']" class="inline-flex space-x-3 items-center group hover:bg-white/10 rounded-xl p-2 -ml-2 transition-all duration-300 hover:scale-105 cursor-pointer">
                 <span class="relative flex-shrink-0">
                     <img class="rounded-full w-12 h-12 border-3 border-white/40 shadow-xl group-hover:border-white/60 transition-all duration-300 group-hover:ring-2 group-hover:ring-white/50" 
@@ -26,7 +26,7 @@
                         {{ getUserName() }}
                     </span>
                     <span class="text-xs text-white/70 font-medium mt-0.5">
-                        {{ getUserType() }}
+                        {{ getUserType() | translate }}
                     </span>
                 </div>
             </a>

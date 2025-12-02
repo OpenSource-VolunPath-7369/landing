@@ -11,6 +11,11 @@
     "readMore": "Leer más",
     "explore": "Explora la comunidad"
   },
+  "header": {
+    "welcome": "BIENVENIDO",
+    "organization": "Organización",
+    "volunteer": "Voluntario"
+  },
   "menu": {
     "dashboard": "Dashboard",
     "community": "Comunidad",
@@ -25,6 +30,20 @@
     "receiveNotifications": "Recibe notificaciones",
     "configureProfile": "Configura tu perfil",
     "resolveDoubts": "Resuelve tus dudas"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "newPublication": "Nueva Publicación",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "published": "publicado",
+    "draft": "borrador",
+    "archived": "archivado",
+    "likes": "Likes",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar",
+    "confirmDeleteEnd": "Esta acción no se puede deshacer.",
+    "errorLoading": "Error al cargar las publicaciones",
+    "errorDeleting": "Error al eliminar la publicación"
   },
   "common": {
     "loading": "Cargando...",

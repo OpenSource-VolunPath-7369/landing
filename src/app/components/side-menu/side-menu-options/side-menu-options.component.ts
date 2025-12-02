@@ -1,19 +1,20 @@
 import { Component } from '@angular/core';
 import { RouterLink,RouterLinkActive} from "@angular/router";
 import { AuthService } from '../../../auth/application/services/auth.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 
 interface MenuOption {
   icon: string;
-  label: string;
-  subLabel: string;
+  labelKey: string;
+  subLabelKey: string;
   route: string;
   organizationOnly?: boolean; // Opcional: solo para organizaciones
 }
 
 @Component({
   selector: 'side-menu-options',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, TranslatePipe],
   templateUrl: './side-menu-options.component.html',
 })
 export class SideMenuOptionsComponent {
@@ -26,39 +27,39 @@ export class SideMenuOptionsComponent {
   private allMenuOptions: MenuOption[] = [
     {
       icon: 'fa-solid fa-user-group',
-      label: 'Comunidad',
-      subLabel: 'Explora la comunidad',
+      labelKey: 'menu.community',
+      subLabelKey: 'community.explore',
       route: '/comunidad'
     },
     {
       icon: 'fa-solid fa-chart-line',
-      label: 'dashboard',
-      subLabel: 'Gestiona tu organización',
+      labelKey: 'menu.dashboard',
+      subLabelKey: 'menu.manageOrganization',
       route: 'dashboard',
       organizationOnly: true // Solo para organizaciones
     },
     {
       icon: 'fa-solid fa-message',
-      label: 'Mensajes',
-      subLabel: 'Recibe y envía mensajes',
+      labelKey: 'menu.messages',
+      subLabelKey: 'menu.receiveSendMessages',
       route: 'mensajes'
     },
     {
       icon: 'fa-solid fa-bell',
-      label: 'Notificaciones',
-      subLabel: 'Recibe notificaciones',
+      labelKey: 'menu.notifications',
+      subLabelKey: 'menu.receiveNotifications',
       route: 'notificaciones'
     },
     {
       icon: 'fa-solid fa-user',
-      label: 'Perfil',
-      subLabel: 'Configura tu perfil',
+      labelKey: 'menu.profile',
+      subLabelKey: 'menu.configureProfile',
       route: 'perfil'
     },
     {
       icon: 'fa-solid fa-question',
-      label: 'Ayuda y Soporte',
-      subLabel: 'Resuelve tus dudas',
+      labelKey: 'menu.support',
+      subLabelKey: 'menu.resolveDoubts',
       route: 'soporte'
     }
   ];
