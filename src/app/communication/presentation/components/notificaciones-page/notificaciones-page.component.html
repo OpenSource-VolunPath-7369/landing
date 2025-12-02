@@ -1,13 +1,13 @@
 <div class="notifications-container">
   <div class="notifications-header">
-    <h1 class="notifications-title">Notificaciones</h1>
+    <h1 class="notifications-title">{{ 'notifications.title' | translate }}</h1>
   </div>
   
   <!-- Estados de carga y error -->
   <div *ngIf="loading" class="flex justify-center items-center py-12">
     <div class="text-center">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-      <p class="mt-4 text-gray-600">Cargando notificaciones...</p>
+      <p class="mt-4 text-gray-600">{{ 'notifications.loading' | translate }}</p>
     </div>
   </div>
 
@@ -17,12 +17,12 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z" />
       </svg>
     </div>
-    <h3 class="text-lg font-medium text-gray-900 mb-2">Error al cargar notificaciones</h3>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">{{ 'notifications.errorLoading' | translate }}</h3>
     <p class="text-gray-600 mb-4">{{ error }}</p>
     <button 
       (click)="retry()" 
       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-      Reintentar
+      {{ 'common.retry' | translate }}
     </button>
   </div>
   
@@ -43,7 +43,7 @@
       [class.unread]="notification.isUnread()"
       [class.clickable]="true"
       (click)="onNotificationClick(notification)"
-      [title]="'Haz clic para ver detalles'">
+      [title]="'notifications.clickToView' | translate">
       
       <div class="notification-icon">
         <i *ngIf="notification.type === 'new_activity'" 

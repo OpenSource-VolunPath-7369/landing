@@ -85,10 +85,28 @@
     "title": "Comunidad",
     "organizations": "Organizaciones",
     "register": "Registrarse",
+    "alreadyRegistered": "Ya registrado",
+    "registerTooltip": "Registrarse en esta actividad",
+    "alreadyRegisteredTooltip": "Ya estás registrado",
+    "volunteerView": "Vista de Voluntario",
+    "organizationView": "Vista de Organización",
+    "createActivity": "Crear Actividad",
     "likes": "Me gusta",
     "volunteers": "voluntarios",
     "readMore": "Leer más",
-    "explore": "Explora la comunidad"
+    "explore": "Explora la comunidad",
+    "atTime": "a las",
+    "registrationStatus": {
+      "pending": "Pendiente de confirmación",
+      "confirmed": "Registro confirmado",
+      "cancelled": "Registro cancelado"
+    },
+    "timeAgo": {
+      "hours": "Hace {{count}} hora",
+      "hoursPlural": "Hace {{count}} horas",
+      "days": "Hace {{count}} día",
+      "daysPlural": "Hace {{count}} días"
+    }
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -179,7 +197,8 @@
     "errorSending": "Error al enviar el mensaje",
     "confirmDelete": "¿Estás seguro de que quieres eliminar este mensaje?",
     "messageDeleted": "Mensaje eliminado exitosamente",
-    "errorDeleting": "Error al eliminar el mensaje"
+    "errorDeleting": "Error al eliminar el mensaje",
+    "new": "Nuevo"
   },
   "notifications": {
     "title": "Notificaciones",
@@ -192,6 +211,9 @@
     "noNotificationsDescription": "No tienes notificaciones nuevas.",
     "markAsRead": "Marcar como leída",
     "delete": "Eliminar",
+    "clickToView": "Haz clic para ver detalles",
+    "newMessageFrom": "Nuevo mensaje de",
+    "sentYouMessage": "te envió un mensaje",
     "types": {
       "newMessage": "Nuevo mensaje",
       "newActivity": "Nueva actividad",
@@ -201,18 +223,44 @@
     }
   },
   "profile": {
-    "title": "Perfil",
+    "title": "Configuración",
     "edit": "Editar perfil",
+    "editProfileInfo": "Editar Información de perfil",
+    "updatePassword": "Actualizar contraseña",
     "save": "Guardar cambios",
     "cancel": "Cancelar",
     "saving": "Guardando...",
+    "loading": "Cargando perfil...",
     "saved": "Perfil actualizado exitosamente",
-    "errorSaving": "Error al actualizar el perfil"
+    "errorSaving": "Error al actualizar el perfil",
+    "personalData": "*Datos personales",
+    "organizationData": "*Datos de la organización",
+    "representativeData": "*Datos del representante",
+    "organizationType": "Tipo de organización:",
+    "name": "NOMBRE:",
+    "email": "CORREO:",
+    "location": "UBICACIÓN:",
+    "phone": "TELÉFONO:",
+    "bio": "Biografía",
+    "skills": "Habilidades",
+    "joinedDate": "Fecha de registro",
+    "fullName": "Nombre completo",
+    "fullNameRequired": "El nombre es requerido",
+    "fullNameMinLength": "El nombre debe tener al menos 3 caracteres"
   },
   "support": {
-    "title": "Ayuda y Soporte",
+    "title": "Soporte y ayuda",
     "faq": "Preguntas Frecuentes",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "contactWhatsApp": "Contactar a soporte por Whatsapp",
+    "faqs": {
+      "q1": "¿Dónde encuentro las tareas y roles asignados dentro de mi voluntariado?",
+      "q2": "¿Cómo funciona la barra de opciones del dashboard?",
+      "q3": "¿De qué forma puedo acceder rápidamente a mis mensajes directos?",
+      "q4": "¿El sistema de notificaciones me permite filtrar entre actividades, mensajes y alertas de proyectos?",
+      "q5": "¿Dónde y cómo puedo editar la información de mi perfil?",
+      "q6": "¿Cómo se organiza la sección de Comunidad y qué puedo hacer allí?"
+    }
   },
   "common": {
     "loading": "Cargando...",

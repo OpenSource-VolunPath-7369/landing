@@ -8,14 +8,14 @@
   </div>
   
   <div class="community-header">
-    <h1 class="community-title">Comunidad</h1>
+    <h1 class="community-title">{{ 'community.title' | translate }}</h1>
     <div *ngIf="isVolunteer()" class="role-badge volunteer-badge">
       <i class="fa-solid fa-user"></i>
-      <span>Vista de Voluntario</span>
+      <span>{{ 'community.volunteerView' | translate }}</span>
     </div>
     <div *ngIf="isOrganization()" class="role-badge organization-badge">
       <i class="fa-solid fa-building"></i>
-      <span>Vista de Organización</span>
+      <span>{{ 'community.organizationView' | translate }}</span>
     </div>
   </div>
   
@@ -62,10 +62,10 @@
               class="register-button"
               (click)="registerForProject(project)"
               [disabled]="isRegistered(project.id)"
-              [title]="isRegistered(project.id) ? 'Ya estás registrado' : 'Registrarse en esta actividad'">
+              [title]="isRegistered(project.id) ? ('community.alreadyRegisteredTooltip' | translate) : ('community.registerTooltip' | translate)">
               <i class="fa-solid fa-user-plus"></i>
-              <span *ngIf="!isRegistered(project.id)">Registrarse</span>
-              <span *ngIf="isRegistered(project.id)">Ya registrado</span>
+              <span *ngIf="!isRegistered(project.id)">{{ 'community.register' | translate }}</span>
+              <span *ngIf="isRegistered(project.id)">{{ 'community.alreadyRegistered' | translate }}</span>
             </button>
             
             <!-- Estado para VOLUNTARIOS registrados -->
@@ -75,13 +75,13 @@
               [class.pending]="getRegistrationStatus(project.id) === 'pending'"
               [class.confirmed]="getRegistrationStatus(project.id) === 'confirmed'">
               <span *ngIf="getRegistrationStatus(project.id) === 'pending'">
-                ⏳ Pendiente de confirmación
+                ⏳ {{ 'community.registrationStatus.pending' | translate }}
               </span>
               <span *ngIf="getRegistrationStatus(project.id) === 'confirmed'">
-                ✅ Registro confirmado
+                ✅ {{ 'community.registrationStatus.confirmed' | translate }}
               </span>
               <span *ngIf="getRegistrationStatus(project.id) === 'cancelled'">
-                ❌ Registro cancelado
+                ❌ {{ 'community.registrationStatus.cancelled' | translate }}
               </span>
             </div>
             
@@ -92,7 +92,7 @@
               (click)="viewOrganizationProfile('create')"
               style="margin-left: 10px;">
               <i class="fa-solid fa-plus"></i>
-              Crear Actividad
+              {{ 'community.createActivity' | translate }}
             </button>
           </div>
           
@@ -105,7 +105,7 @@
                 <i class="fa-solid fa-calendar"></i> 
                 <span *ngIf="project.date">{{ project.date }}</span>
                 <span *ngIf="!project.date && !project.time">Fecha no disponible</span>
-                <span *ngIf="project.date && project.time"> a las </span>
+                <span *ngIf="project.date && project.time"> {{ 'community.atTime' | translate }} </span>
                 <span *ngIf="project.time">{{ project.time }}</span>
               </span>
               <!-- Lugar -->
@@ -116,7 +116,7 @@
               </span>
               <!-- Voluntarios -->
               <span>
-                <i class="fa-solid fa-users"></i> {{ project.currentVolunteers }}/{{ project.maxVolunteers }} voluntarios
+                <i class="fa-solid fa-users"></i> {{ project.currentVolunteers }}/{{ project.maxVolunteers }} {{ 'community.volunteers' | translate }}
               </span>
             </div>
           </div>

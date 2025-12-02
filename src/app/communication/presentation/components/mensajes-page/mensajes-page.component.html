@@ -1,10 +1,10 @@
 <div class="mensajes-container min-h-screen bg-gray-50">
   <!-- Título de la sección -->
   <div class="mb-6" style="padding-bottom: 20px; border-bottom: 2px solid rgba(14, 165, 233, 0.1);">
-    <h1 class="mensajes-title">Mensajes</h1>
+    <h1 class="mensajes-title">{{ 'messages.title' | translate }}</h1>
     <div *ngIf="unreadCount > 0" class="mt-2">
       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-        {{ unreadCount }} mensaje{{ unreadCount > 1 ? 's' : '' }} sin leer
+        {{ unreadCount }} {{ unreadCount > 1 ? ('messages.unreadCountPlural' | translate) : ('messages.unreadCount' | translate) }}
       </span>
     </div>
   </div>
@@ -15,7 +15,7 @@
       (click)="toggleSendForm()" 
       class="send-message-button">
       <mat-icon>send</mat-icon>
-      <span>{{ isVolunteerMode ? 'Enviar a organizaciones' : 'Enviar a voluntarios' }}</span>
+      <span>{{ isVolunteerMode ? ('messages.sendToOrganizations' | translate) : ('messages.sendToVolunteers' | translate) }}</span>
     </button>
     <button 
       *ngIf="unreadCount > 0"
@@ -24,7 +24,7 @@
       <svg class="-ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
-      Marcar todos como leídos
+      {{ 'messages.markAllRead' | translate }}
     </button>
   </div>
 
@@ -32,7 +32,7 @@
   <div *ngIf="loading" class="flex justify-center items-center py-12">
     <div class="text-center">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-      <p class="mt-4 text-gray-600">Cargando mensajes...</p>
+      <p class="mt-4 text-gray-600">{{ 'messages.loading' | translate }}</p>
     </div>
   </div>
 
@@ -42,7 +42,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z" />
       </svg>
     </div>
-    <h3 class="text-lg font-medium text-gray-900 mb-2">Error al cargar mensajes</h3>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">{{ 'messages.errorLoading' | translate }}</h3>
     <p class="text-gray-600 mb-4">{{ error }}</p>
     <button 
       (click)="retry()" 
@@ -50,7 +50,7 @@
       <svg class="-ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
       </svg>
-      Reintentar
+      {{ 'common.retry' | translate }}
     </button>
   </div>
 

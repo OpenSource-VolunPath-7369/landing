@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FAQ } from '../../interfaces/faq.interface';
 
 @Component({
   selector: 'app-soporte-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './soporte-page.component.html',
   styleUrls: ['./soporte-page.component.css']
 })

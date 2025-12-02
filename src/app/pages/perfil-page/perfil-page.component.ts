@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { TranslatePipe } from '@ngx-translate/core';
 import { OrganizationProfile } from '../../interfaces/organization.interface';
 import { ProfileService } from '../../services/profile.service';
 import { OrganizationService } from '../../organizations/application/services/organization.service';
@@ -34,7 +35,8 @@ import { switchMap, map } from 'rxjs/operators';
     MatIconModule,
     MatSelectModule,
     MatSnackBarModule,
-    MatChipsModule
+    MatChipsModule,
+    TranslatePipe
   ],
   templateUrl: './perfil-page.component.html',
   styleUrls: ['./perfil-page.component.css']

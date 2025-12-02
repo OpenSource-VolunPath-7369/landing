@@ -20,10 +20,12 @@ import { User } from '../../../../interfaces';
  * @remarks
  * This component is part of the Projects bounded context presentation layer.
  */
+import { TranslatePipe } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-comunidad-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './comunidad-page.component.html',
   styleUrls: ['./comunidad-page.component.css']
 })

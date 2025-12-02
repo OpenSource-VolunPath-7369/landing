@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MessageListComponent } from '../../../../components/message-list/message-list.component';
 import { MessageService } from '../../../application/services/message.service';
 import { VolunteerService } from '../../../../volunteers/application/services/volunteer.service';
@@ -41,7 +42,8 @@ import { User } from '../../../../interfaces';
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
-    MatCardModule
+    MatCardModule,
+    TranslatePipe
   ],
   templateUrl: './mensajes-page.component.html',
   styleUrls: ['./mensajes-page.component.css']

@@ -1,13 +1,13 @@
 <div class="profile-container">
   <div class="profile-header">
-    <h1 class="profile-title">Configuración</h1>
+    <h1 class="profile-title">{{ 'profile.title' | translate }}</h1>
   </div>
   
   <!-- Estado de carga -->
   <div *ngIf="loading && !isEditing" class="flex justify-center items-center py-12">
     <div class="text-center">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-      <p class="mt-4 text-gray-600">Cargando perfil...</p>
+      <p class="mt-4 text-gray-600">{{ 'profile.loading' | translate }}</p>
     </div>
   </div>
 
@@ -43,22 +43,22 @@
         <div *ngIf="!isEditing">
           <!-- Información del voluntario -->
           <div class="section">
-            <h3 class="section-title">*Datos personales</h3>
+            <h3 class="section-title">{{ 'profile.personalData' | translate }}</h3>
             <div class="data-grid">
               <div class="data-item">
-                <span class="data-label">Nombre:</span>
+                <span class="data-label">{{ 'profile.name' | translate }}</span>
                 <span class="data-value">{{ volunteerProfile.name }}</span>
               </div>
               <div class="data-item">
-                <span class="data-label">Correo:</span>
+                <span class="data-label">{{ 'profile.email' | translate }}</span>
                 <span class="data-value">{{ volunteerProfile.email }}</span>
               </div>
               <div class="data-item">
-                <span class="data-label">Ubicación:</span>
+                <span class="data-label">{{ 'profile.location' | translate }}</span>
                 <span class="data-value">{{ volunteerProfile.location }}</span>
               </div>
               <div class="data-item">
-                <span class="data-label">Fecha de registro:</span>
+                <span class="data-label">{{ 'profile.joinedDate' | translate }}:</span>
                 <span class="data-value">{{ volunteerProfile.joinedDate | date:'dd/MM/yyyy' }}</span>
               </div>
             </div>
@@ -66,7 +66,7 @@
 
           <!-- Biografía -->
           <div class="section" *ngIf="volunteerProfile.bio">
-            <h3 class="section-title">Biografía</h3>
+            <h3 class="section-title">{{ 'profile.bio' | translate }}</h3>
             <div class="data-item">
               <span class="data-value">{{ volunteerProfile.bio }}</span>
             </div>
