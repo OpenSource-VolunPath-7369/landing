@@ -132,6 +132,32 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
             this.imagePreview = publication.image;
           }
           
+          // Convertir fecha de string a Date para el datepicker
+          let dateValue: Date | null = null;
+          if (publication.date) {
+            try {
+              // El modelo devuelve fecha en formato DD/MM/YYYY
+              if (publication.date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+                const [day, month, year] = publication.date.split('/');
+                dateValue = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+              } else if (publication.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                // Si viene en formato YYYY-MM-DD
+                dateValue = new Date(publication.date);
+              } else {
+                // Intentar parsear como ISO
+                dateValue = new Date(publication.date);
+              }
+              
+              // Verificar que la fecha sea válida
+              if (isNaN(dateValue.getTime())) {
+                dateValue = null;
+              }
+            } catch (e) {
+              console.warn('Error parsing date for edit:', publication.date, e);
+              dateValue = null;
+            }
+          }
+          
           // Llenar el formulario con los datos de la publicación
           this.publicationForm.patchValue({
             title: publication.title,
@@ -139,7 +165,7 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
             organizationId: publication.organizationId,
             tags: publication.tags.join(', '),
             isPublic: publication.isPublished(),
-            scheduledDate: publication.date ? new Date(publication.date) : null,
+            scheduledDate: dateValue,
             time: publication.time,
             location: publication.location,
             maxVolunteers: publication.maxVolunteers
@@ -244,23 +270,17 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
         return;
       }
 
-      // Preparar fecha en formato YYYY-MM-DD
-      let scheduledDateStr = '';
-      if (formData.scheduledDate) {
-        const scheduledDate = new Date(formData.scheduledDate);
-        scheduledDateStr = scheduledDate.toISOString().split('T')[0]; // YYYY-MM-DD
-      } else if (!this.isEditMode) {
-        scheduledDateStr = new Date().toISOString().split('T')[0];
-      }
-
       // Preparar fecha y hora correctamente
       let dateStr = '';
       let timeStr = formData.time || '';
       
       if (formData.scheduledDate) {
-        // Si es un objeto Date, convertirlo a string YYYY-MM-DD
+        // Si es un objeto Date, convertirlo a string YYYY-MM-DD evitando problemas de zona horaria
         if (formData.scheduledDate instanceof Date) {
-          dateStr = formData.scheduledDate.toISOString().split('T')[0];
+          const year = formData.scheduledDate.getFullYear();
+          const month = String(formData.scheduledDate.getMonth() + 1).padStart(2, '0');
+          const day = String(formData.scheduledDate.getDate()).padStart(2, '0');
+          dateStr = `${year}-${month}-${day}`;
         } else if (typeof formData.scheduledDate === 'string') {
           // Si ya es string, verificar formato
           if (formData.scheduledDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
@@ -270,11 +290,14 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
             const [day, month, year] = formData.scheduledDate.split('/');
             dateStr = `${year}-${month}-${day}`;
           } else {
-            // Intentar parsear como ISO
+            // Intentar parsear como ISO o Date string
             try {
               const dateObj = new Date(formData.scheduledDate);
               if (!isNaN(dateObj.getTime())) {
-                dateStr = dateObj.toISOString().split('T')[0];
+                const year = dateObj.getFullYear();
+                const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                const day = String(dateObj.getDate()).padStart(2, '0');
+                dateStr = `${year}-${month}-${day}`;
               }
             } catch (e) {
               console.warn('Error parsing date:', formData.scheduledDate);
@@ -283,7 +306,11 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
         }
       } else if (!this.isEditMode) {
         // Si no hay fecha y es creación nueva, usar fecha actual
-        dateStr = new Date().toISOString().split('T')[0];
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        dateStr = `${year}-${month}-${day}`;
       }
 
       const publicationData: any = {
@@ -298,8 +325,8 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
         updatedAt: new Date().toISOString()
       };
 
-      // Para creación, usar scheduledDate y scheduledTime directamente
-      // Para edición, usar date y time para que el servicio los convierta
+      // Para creación, usar scheduledDate y scheduledTime
+      // Para edición, usar date y time (el servicio los convertirá a scheduledDate y scheduledTime)
       if (!this.isEditMode) {
         publicationData.status = 'published';
         publicationData.likes = 0;
@@ -307,10 +334,14 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
         publicationData.scheduledDate = dateStr;
         publicationData.scheduledTime = timeStr;
       } else {
-        // En modo edición, usar date y time para que el servicio los convierta correctamente
         publicationData.status = formData.status || 'published';
-        publicationData.date = dateStr;
-        publicationData.time = timeStr;
+        // En modo edición, usar date y time para que el servicio los convierta
+        if (dateStr) {
+          publicationData.date = dateStr;
+        }
+        if (timeStr) {
+          publicationData.time = timeStr;
+        }
       }
       
       console.log('Publication data prepared:', {
