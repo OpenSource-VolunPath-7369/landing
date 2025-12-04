@@ -1,14 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Subject, takeUntil, combineLatest, forkJoin } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Subject, takeUntil, combineLatest, forkJoin, of } from 'rxjs';
+import { map, switchMap, catchError } from 'rxjs/operators';
 import { ProjectService } from '../../../application/services/project.service';
 import { OrganizationService } from '../../../../organizations/application/services/organization.service';
 import { PublicationService } from '../../../../publications/application/services/publication.service';
 import { AuthService } from '../../../../auth/application/services/auth.service';
 import { NotificationService } from '../../../../communication/application/services/notification.service';
 import { ApiService } from '../../../../shared/infrastructure/api.service';
+import { EnrollmentService, Enrollment } from '../../../../publications/application/services/enrollment.service';
+import { VolunteerService } from '../../../../volunteers/application/services/volunteer.service';
 import { Project } from '../../../domain/model/project';
 import { Organization } from '../../../../organizations/domain/model/organization';
 import { Publication } from '../../../../publications/domain/model/publication';
@@ -40,6 +42,9 @@ export default class ComunidadPageComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   userRegistrations: Map<string, 'pending' | 'confirmed' | 'cancelled'> = new Map();
   
+  // Enrollments por publicación
+  publicationEnrollments: { [publicationId: string]: Enrollment[] } = {};
+  
   // Mensaje de éxito
   successMessage: string | null = null;
   showSuccessMessage = false;
@@ -56,6 +61,8 @@ export default class ComunidadPageComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private notificationService: NotificationService,
     private apiService: ApiService,
+    private enrollmentService: EnrollmentService,
+    private volunteerService: VolunteerService,
     private router: Router
   ) {}
 
@@ -134,6 +141,14 @@ export default class ComunidadPageComponent implements OnInit, OnDestroy {
           this.publications = publications.filter(pub => pub.isPublished());
           this.loading = false;
           console.log('Publicaciones cargadas en comunidad:', this.publications.length);
+          
+          // Load enrollments for each publication
+          this.publications.forEach(pub => {
+            this.loadEnrollmentsForPublication(pub.id);
+            if (this.currentUser && this.isVolunteer()) {
+              this.checkRegistrationStatus(pub.id);
+            }
+          });
         },
         error: (error: any) => {
           console.error('Error loading publications:', error);
@@ -203,7 +218,18 @@ export default class ComunidadPageComponent implements OnInit, OnDestroy {
    * Check if user is registered for a project
    */
   isRegistered(projectId: string): boolean {
-    return this.userRegistrations.has(projectId);
+    // Check both projects and publications
+    if (this.userRegistrations.has(projectId)) {
+      return true;
+    }
+    
+    // Check publications enrollments
+    if (this.currentUser && this.isVolunteer()) {
+      const enrollments = this.publicationEnrollments[projectId] || [];
+      return enrollments.some(e => e.volunteerName === this.currentUser?.name);
+    }
+    
+    return false;
   }
 
   /**
@@ -241,22 +267,134 @@ export default class ComunidadPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Para publicaciones, permitir registro siempre
-    // TODO: Conectar con backend Enrollments bounded context
-    // Por ahora es mock
-    this.userRegistrations.set(publication.id, 'pending');
+    // Check if there are available spots
+    if (!publication.hasAvailableSpots()) {
+      alert('No hay cupos disponibles');
+      return;
+    }
+
+    // Get volunteer ID from backend
+    this.volunteerService.getVolunteerByUserId(this.currentUser.id)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(volunteer => {
+          if (!volunteer) {
+            throw new Error('No se encontró el perfil de voluntario. Por favor completa tu perfil primero.');
+          }
+          if (!this.currentUser) {
+            throw new Error('Usuario no encontrado');
+          }
+          console.log('Registrando en comunidad con volunteerId:', volunteer.id, 'publicationId:', publication.id);
+          return this.enrollmentService.registerVolunteer(
+            publication.id,
+            volunteer.id,
+            this.currentUser.name
+          );
+        }),
+        catchError(error => {
+          console.error('Error obteniendo voluntario:', error);
+          // Try alternative: get from volunteers list
+          return this.volunteerService.getVolunteers().pipe(
+            map(volunteers => {
+              const volunteer = volunteers.find(v => v.userId === this.currentUser?.id);
+              if (!volunteer) {
+                throw new Error('No se encontró el perfil de voluntario. Por favor completa tu perfil primero.');
+              }
+              return volunteer;
+            }),
+            switchMap(volunteer => {
+              if (!this.currentUser) {
+                throw new Error('Usuario no encontrado');
+              }
+              console.log('Registrando en comunidad con volunteerId (alternativo):', volunteer.id);
+              return this.enrollmentService.registerVolunteer(
+                publication.id,
+                volunteer.id,
+                this.currentUser.name
+              );
+            })
+          );
+        })
+      )
+      .subscribe({
+        next: (result) => {
+          console.log('Registro exitoso en comunidad:', result);
+          
+          // Reload enrollments from backend
+          this.loadEnrollmentsForPublication(publication.id);
+          
+          // Update local registration state
+          this.userRegistrations.set(publication.id, 'confirmed');
+          
+          // Reload publications to get updated counter
+          setTimeout(() => {
+            this.publicationService.refreshPublications();
+          }, 500);
+          
+          // Mostrar mensaje de éxito
+          this.successMessage = '¡Registrado exitosamente!';
+          this.showSuccessMessage = true;
+          
+          // Ocultar el mensaje después de 3 segundos
+          setTimeout(() => {
+            this.showSuccessMessage = false;
+            this.successMessage = null;
+          }, 3000);
+        },
+        error: (error: any) => {
+          console.error('Error registering in community:', error);
+          alert(error.message || 'Error al registrarse');
+        }
+      });
+  }
+
+  loadEnrollmentsForPublication(publicationId: string) {
+    console.log('Cargando enrollments para publicación en comunidad:', publicationId);
+    this.enrollmentService.getEnrollmentsByPublication(publicationId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (enrollments) => {
+          console.log('Enrollments cargados en comunidad para publicación', publicationId, ':', enrollments);
+          this.publicationEnrollments = {
+            ...this.publicationEnrollments,
+            [publicationId]: enrollments
+          };
+        },
+        error: (error) => {
+          console.error('Error loading enrollments in community:', error);
+        }
+      });
+  }
+
+  checkRegistrationStatus(publicationId: string) {
+    if (!this.currentUser) return;
     
-    // Mostrar mensaje de éxito
-    this.successMessage = '¡Registrado exitosamente!';
-    this.showSuccessMessage = true;
-    
-    // Ocultar el mensaje después de 3 segundos
-    setTimeout(() => {
-      this.showSuccessMessage = false;
-      this.successMessage = null;
-    }, 3000);
-    
-    console.log('Registration created for publication:', publication.id);
+    this.volunteerService.getVolunteerByUserId(this.currentUser.id)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(volunteer => {
+          if (!volunteer) {
+            return of(false);
+          }
+          return this.enrollmentService.isVolunteerRegistered(publicationId, volunteer.id);
+        }),
+        catchError(error => {
+          console.error('Error checking registration status:', error);
+          return of(false);
+        })
+      )
+      .subscribe({
+        next: (isRegistered) => {
+          if (isRegistered) {
+            this.userRegistrations.set(publicationId, 'confirmed');
+            this.loadEnrollmentsForPublication(publicationId);
+          }
+        }
+      });
+  }
+
+  getEnrollmentsForPublication(publicationId: string): Enrollment[] {
+    return this.publicationEnrollments[publicationId] || [];
   }
 
   registerForProject(project: Project) {
@@ -377,6 +515,10 @@ export default class ComunidadPageComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate(['/organizacion', organizationId]);
     }
+  }
+
+  trackByEnrollmentId(index: number, enrollment: Enrollment): string {
+    return String(enrollment.id);
   }
 }
 

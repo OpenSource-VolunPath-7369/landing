@@ -192,6 +192,17 @@
                 <i class="fa-solid fa-users"></i> {{ publication.currentVolunteers }}/{{ publication.maxVolunteers }} {{ 'community.volunteers' | translate }}
               </span>
             </div>
+            
+            <!-- Volunteers List -->
+            <div class="volunteers-list" *ngIf="getEnrollmentsForPublication(publication.id) && getEnrollmentsForPublication(publication.id).length > 0">
+              <h4 class="volunteers-list-title">Voluntarios registrados:</h4>
+              <ul class="volunteers-names">
+                <li *ngFor="let enrollment of getEnrollmentsForPublication(publication.id); trackBy: trackByEnrollmentId">
+                  {{ enrollment.volunteerName }}
+                </li>
+              </ul>
+            </div>
+            
             <div *ngIf="publication.tags && publication.tags.length > 0" class="tags">
               <span *ngFor="let tag of publication.tags" class="tag">{{ tag }}</span>
             </div>
