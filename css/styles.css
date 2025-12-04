@@ -621,6 +621,88 @@ a{
   }
 }
 
+/* ===== TEAM MEMBERS ===== */
+.team-members {
+  padding: 6rem 2rem;
+  background: var(--bg);
+  text-align: center;
+}
+
+.team-members h2 {
+  margin-bottom: 2rem;
+  font-weight: 600;
+  color: var(--negro);
+}
+
+.team-members__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 3rem;
+  max-width: 900px;
+  margin: 4rem auto 0;
+  justify-items: center;
+}
+
+.team-member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.team-member__photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member__photo:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+}
+
+.team-member__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-member h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--negro);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .team-members {
+    padding: 4rem 1rem;
+  }
+
+  .team-members h2 {
+    font-size: 2.5rem;
+  }
+
+  .team-members__grid {
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .team-member__photo {
+    width: 150px;
+    height: 150px;
+  }
+
+  .team-member h3 {
+    font-size: 1.25rem;
+  }
+}
+
 /* ===== PRICING ===== */
 #pricing {
   padding: 6rem 2rem;
@@ -636,7 +718,7 @@ a{
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 5rem;
+  gap: 2rem;
   justify-items: center;
 }
 
