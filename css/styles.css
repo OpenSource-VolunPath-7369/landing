@@ -679,7 +679,7 @@ a{
 }
 
 .team-member h3 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 600;
   color: var(--negro);
   margin: 0;
@@ -706,7 +706,7 @@ a{
   }
 
   .team-member h3 {
-    font-size: 1.75rem;
+    font-size: 2.25rem;
   }
 }
 
