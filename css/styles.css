@@ -163,10 +163,16 @@ a{
 .header__contenido {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 0.5rem 0;
   width: 100%;
   margin: 0;
+  position: relative;
+}
+
+.logo {
+  position: absolute;
+  left: 2rem;
 }
 
 .logo img {
@@ -178,6 +184,8 @@ a{
   display: flex;
   align-items: center;
   gap: 3rem;
+  justify-content: center;
+  flex: 1;
 }
 
 .header__nav a {
@@ -196,6 +204,8 @@ a{
   background: none;
   border: none;
   cursor: pointer;
+  position: absolute;
+  right: 2rem;
 }
 @media (max-width: 1170px) {
   .header__nav {
