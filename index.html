@@ -1,10 +1,9 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" style="scroll-behavior: smooth;">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>VolunPath — Conecta. Organiza. Potencia tu impacto.</title>
-    <meta name="description" content="VolunPath: plataforma para organizaciones y voluntarios. Perfiles, dashboard, inventario y reportes." />
     <meta name="description" content="VolunPath es una plataforma para conectar voluntarios y organizaciones. Gestiona perfiles, proyectos, inventario, reportes y potencia tu impacto social." />
     <meta name="keywords" content="voluntariado, gestión de organizaciones, dashboard, reportes, voluntarios, proyectos sociales" />
 
@@ -27,15 +26,18 @@
         </div>
 
       <nav class="header__nav">
-        <a href="#features">Funcionalidades</a>
-        <a href="#how">Cómo funciona</a>
-        <a href="#about-team">Sobre el equipo</a>
-        <a href="#about-product">Sobre el producto</a>
-        <a href="#team-members">Integrantes</a>
-        <a href="#pricing">Precios</a>
-        <a class="btn primary" href="#login">Iniciar sesión</a>
-        <a class="btn primary" href="#signup">Registrarse</a>
+        <a href="#features" data-i18n="nav.features">Funcionalidades</a>
+        <a href="#how" data-i18n="nav.how">Cómo funciona</a>
+        <a href="#about-team" data-i18n="nav.aboutTeam">Sobre el equipo</a>
+        <a href="#about-product" data-i18n="nav.aboutProduct">Sobre el producto</a>
+        <a href="#team-members" data-i18n="nav.members">Integrantes</a>
+        <a href="#pricing" data-i18n="nav.pricing">Precios</a>
+        <a class="btn primary" href="#login" data-i18n="nav.login">Iniciar sesión</a>
+        <a class="btn primary" href="#signup" data-i18n="nav.signup">Registrarse</a>
       </nav>
+      <button class="language-toggle" id="languageToggle" aria-label="Cambiar idioma">
+        <span id="currentLang">ES</span>
+      </button>
       <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
     </div>
   </header>
@@ -46,14 +48,14 @@
     <section class="hero">
       <div class="contenedor hero__contenido">
         <div class="hero__texto">
-          <h1>VolunPath — Conecta. Organiza. Potencia tu impacto.</h1>
-          <p class="lead">Un espacio para que organizaciones gestionen proyectos y voluntarios encuentren su camino.<br>Dashboard privado, perfiles públicos e informes listos para compartir.</p>
+          <h1 data-i18n="hero.title">VolunPath — Conecta. Organiza. Potencia tu impacto.</h1>
+          <p class="lead" data-i18n="hero.description">Un espacio para que organizaciones gestionen proyectos y voluntarios encuentren su camino.<br>Dashboard privado, perfiles públicos e informes listos para compartir.</p>
           <div class="hero__botones">
-            <a class="btn primary" href="https://volunpath.netlify.app" target="_blank">Prueba gratis</a>
+            <a class="btn primary" href="https://volunpath.netlify.app" target="_blank" data-i18n="hero.button">Prueba gratis</a>
           </div>
         </div>
         <div class="hero__imagen">
-          <img src="images/manos-unidas-1.png" alt="Ilustración de personas colaborando en una organización sin fines de lucro">
+          <img src="images/manos-unidas-1.png" alt="Ilustración de personas colaborando en una organización sin fines de lucro" loading="lazy">
         </div>
       </div>
     
@@ -62,38 +64,38 @@
 
     <!-- FEATURES -->
     <section id="features" class="contenedor funcionalidades">
-    <h2>Funcionalidades</h2>
+    <h2 data-i18n="features.title">Funcionalidades</h2>
     <div class="subtitle">
-    <p>Todo lo que necesitas en un solo lugar: conecta tu equipo, organiza tus tareas<br>y lleva el control de tu impacto sin complicaciones.</p>
+    <p data-i18n="features.subtitle">Todo lo que necesitas en un solo lugar: conecta tu equipo, organiza tus tareas<br>y lleva el control de tu impacto sin complicaciones.</p>
     </div>
         <div class="features-layout">
 
             <!-- Fila superior -->
             <div class="top_row">
               <article class="card">
-                <h3>Perfiles públicos</h3>
-                <p>Muestra quiénes son, su misión y eventos para atraer voluntarios y donantes.</p>
+                <h3 data-i18n="features.publicProfiles">Perfiles públicos</h3>
+                <p data-i18n="features.publicProfilesDesc">Muestra quiénes son, su misión y eventos para atraer voluntarios y donantes.</p>
               </article>
               <article class="card">
-                <h3>Dashboard privado</h3>
-                <p>Roles, tareas y calendarios para coordinar equipos sin depender de canales dispersos.</p>
+                <h3 data-i18n="features.dashboard">Dashboard privado</h3>
+                <p data-i18n="features.dashboardDesc">Roles, tareas y calendarios para coordinar equipos sin depender de canales dispersos.</p>
               </article>
             </div>
 
             <!-- Fila inferior -->
             <div class="bottom_row">
                 <article class="card">
-                    <h3>Inventarios & presupuestos</h3>
-                    <p>Control de stock, historial de donaciones y control de gastos.</p>
+                    <h3 data-i18n="features.inventory">Inventarios & presupuestos</h3>
+                    <p data-i18n="features.inventoryDesc">Control de stock, historial de donaciones y control de gastos.</p>
                 </article>
             
                 <div class="center-image">
-                    <img src="images/voluntarios-grupo-1.png" alt="Grupo de voluntarios">
+                    <img src="images/voluntarios-grupo-1.png" alt="Grupo de voluntarios" loading="lazy">
                 </div>
             
                 <article class="card">
-                    <h3>Reportes</h3>
-                    <p>Exporta métricas de impacto y horas de voluntariado en un clic.</p>
+                    <h3 data-i18n="features.reports">Reportes</h3>
+                    <p data-i18n="features.reportsDesc">Exporta métricas de impacto y horas de voluntariado en un clic.</p>
                 </article>
             </div>
         
@@ -105,32 +107,32 @@
 <!-- HOW -->
 <section id="how" class="how">
   <div class="contenedor">
-    <h2>¿Cómo funciona?</h2>
+    <h2 data-i18n="how.title">¿Cómo funciona?</h2>
     <div class="subtitle">
-        <p>Regístrate gratis, crea tu espacio y empieza a coordinar con tu equipo.<br>Organiza eventos, gestiona recursos y mide resultados en minutos.</p>    
+        <p data-i18n="how.subtitle">Regístrate gratis, crea tu espacio y empieza a coordinar con tu equipo.<br>Organiza eventos, gestiona recursos y mide resultados en minutos.</p>    
     </div>
     <div class="how__contenido">
       
       <div class="textos">
         <div class="how__informacion--titulo">
-          <h3> <span class="acent-1">Conecta.</span><br><span class="acent-2">Organiza.</span><br>Potencia tu impacto.</h3>
+          <h3> <span class="acent-1" data-i18n="how.connect">Conecta.</span><br><span class="acent-2" data-i18n="how.organize">Organiza.</span><br><span data-i18n="how.impact">Potencia tu impacto.</span></h3>
         </div>
         
         <div class="how__informacion">
           <div class="how__card op1">
-            <p><span class="bold">Regístrate:</span> Registra tu organización o perfil de voluntario.</p>
+            <p><span class="bold" data-i18n="how.register">Regístrate:</span> <span data-i18n="how.registerDesc">Registra tu organización o perfil de voluntario.</span></p>
           </div>
           <div class="how__card op2">
-            <p><span class="bold">Organiza:</span> Planifica eventos, asigna tareas y administra inventario.</p>
+            <p><span class="bold" data-i18n="how.organizeTitle">Organiza:</span> <span data-i18n="how.organizeDesc">Planifica eventos, asigna tareas y administra inventario.</span></p>
           </div>
           <div class="how__card op3">
-            <p><span class="bold">Mide:</span> Genera reportes para donantes y comparte resultados.</p>
+            <p><span class="bold" data-i18n="how.measure">Mide:</span> <span data-i18n="how.measureDesc">Genera reportes para donantes y comparte resultados.</span></p>
           </div>
         </div>
       </div>
       
       <div class="how__image">
-        <img src="images/manos-unidas-2.png" alt="manos unidas">
+        <img src="images/manos-unidas-2.png" alt="Ilustración de manos unidas representando colaboración" loading="lazy">
       </div>
     </div>
   </div>
@@ -141,18 +143,18 @@
     <!-- ABOUT THE TEAM -->
     <section id="about-team" class="about-team">
       <div class="contenedor">
-        <h2>Sobre el equipo</h2>
+        <h2 data-i18n="aboutTeam.title">Sobre el equipo</h2>
         <div class="subtitle">
-          <p>Conoce a las personas detrás de VolunPath.<br>Un equipo comprometido con el impacto social y la innovación tecnológica.</p>
+          <p data-i18n="aboutTeam.subtitle">Conoce a las personas detrás de VolunPath.<br>Un equipo comprometido con el impacto social y la innovación tecnológica.</p>
         </div>
         <div class="about-team__video-container">
           <div class="video-wrapper">
             <iframe 
               src="https://www.youtube.com/embed/K4tSlP2UUjU" 
               title="Video sobre el equipo de VolunPath" 
-              frameborder="0" 
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
               allowfullscreen
+              loading="lazy"
               class="team-video">
             </iframe>
           </div>
@@ -165,18 +167,18 @@
     <!-- ABOUT THE PRODUCT -->
     <section id="about-product" class="about-product">
       <div class="contenedor">
-        <h2>Sobre el producto</h2>
+        <h2 data-i18n="aboutProduct.title">Sobre el producto</h2>
         <div class="subtitle">
-          <p>Descubre cómo VolunPath transforma la gestión de voluntariado.<br>Una plataforma diseñada para conectar, organizar y potenciar el impacto social.</p>
+          <p data-i18n="aboutProduct.subtitle">Descubre cómo VolunPath transforma la gestión de voluntariado.<br>Una plataforma diseñada para conectar, organizar y potenciar el impacto social.</p>
         </div>
         <div class="about-product__video-container">
           <div class="video-wrapper">
             <iframe 
               src="https://www.youtube.com/embed/oBuvu6LBg1c" 
               title="Video sobre el producto VolunPath" 
-              frameborder="0" 
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
               allowfullscreen
+              loading="lazy"
               class="product-video">
             </iframe>
           </div>
@@ -187,20 +189,20 @@
     <!-- TEAM MEMBERS -->
     <section id="team-members" class="team-members">
       <div class="contenedor">
-        <h2>Nuestro Equipo</h2>
+        <h2 data-i18n="team.title">Nuestro Equipo</h2>
         <div class="subtitle">
-          <p>Conoce a los integrantes que hacen posible VolunPath.<br>Un equipo comprometido con la innovación y el impacto social.</p>
+          <p data-i18n="team.subtitle">Conoce a los integrantes que hacen posible VolunPath.<br>Un equipo comprometido con la innovación y el impacto social.</p>
         </div>
         <div class="team-members__grid">
           <div class="team-member">
             <div class="team-member__photo">
-              <img src="images/Integrante-Mel-Andree-Orellana.jpeg" alt="Mel Andree Orellana">
+              <img src="images/Integrante-Mel-Andree-Orellana.jpeg" alt="Mel Andree Orellana - Miembro del equipo VolunPath" loading="lazy">
             </div>
             <h3>Mel Andree Orellana</h3>
           </div>
           <div class="team-member">
             <div class="team-member__photo">
-              <img src="images/fotoJean.png" alt="Jean">
+              <img src="images/fotoJean.png" alt="Jean - Miembro del equipo VolunPath" loading="lazy">
             </div>
             <h3>Jean</h3>
           </div>
@@ -211,27 +213,27 @@
     
     <!-- PRICING (simple) -->
     <section id="pricing" class="section contenedor">
-      <h2>Planes</h2>
+      <h2 data-i18n="pricing.title">Planes</h2>
       <div class="subtitle">
-        <p>Elige el plan que mejor se adapte a tu organización: empieza gratis o<br>potencia tu alcance con herramientas avanzadas.</p>
+        <p data-i18n="pricing.subtitle">Elige el plan que mejor se adapte a tu organización: empieza gratis o<br>potencia tu alcance con herramientas avanzadas.</p>
       </div>
       <div class="grid pricing-grid contenedor">
 
         <div class="plan_card">
-          <h3>Gratis</h3>
-          <p>Perfil público + Dashboard básico + Miembros y voluntarios limitados</p>
-          <a class="btn ghost" href="#signup">Comenzar</a>
+          <h3 data-i18n="pricing.free">Gratis</h3>
+          <p data-i18n="pricing.freeDesc">Perfil público + Dashboard básico + Miembros y voluntarios limitados</p>
+          <a class="btn ghost" href="#signup" data-i18n="pricing.freeButton">Comenzar</a>
           <div class="card-image">
-              <img src="images/manos-levantadas.png" alt="Icono plan gratis">
+              <img src="images/manos-levantadas.png" alt="Icono plan gratis" loading="lazy">
           </div>
         </div>
 
         <div class="plan_card highlight">
-          <h3>Pro</h3>
-          <p>Destacar perfil o eventos + Dashboard profesional + Miembros ilimitados</p>
-          <a class="btn primary" href="#signup">Elegir Pro</a>
+          <h3 data-i18n="pricing.pro">Pro</h3>
+          <p data-i18n="pricing.proDesc">Destacar perfil o eventos + Dashboard profesional + Miembros ilimitados</p>
+          <a class="btn primary" href="#signup" data-i18n="pricing.proButton">Elegir Pro</a>
           <div class="card-image">
-              <img src="images/manos-levantadas.png" alt="Icono plan gratis">
+              <img src="images/manos-levantadas.png" alt="Icono plan Pro" loading="lazy">
           </div>
         </div>
       </div>
@@ -244,11 +246,11 @@
       <div class="container footer-inner">
         <div>
           <strong>VolunPath</strong>
-          <p class="muted">Conecta. Organiza. Potencia tu impacto.</p>
+          <p class="muted" data-i18n="footer.tagline">Conecta. Organiza. Potencia tu impacto.</p>
         </div>
         <div>
-          <p class="muted">Correo: <a href="mailto:hello@volunpath.org">hello@volunpath.org</a></p>
-          <p class="muted">Síguenos: <a href="#">Tiktok</a> · <a href="#">Instagram</a></p>
+          <p class="muted"><span data-i18n="footer.email">Correo:</span> <a href="mailto:hello@volunpath.org">hello@volunpath.org</a></p>
+          <p class="muted"><span data-i18n="footer.follow">Síguenos:</span> <a href="https://www.tiktok.com/@volunpath" target="_blank" rel="noopener noreferrer">Tiktok</a> · <a href="https://www.instagram.com/volunpath" target="_blank" rel="noopener noreferrer">Instagram</a></p>
         </div>
       </div>
     </footer>
@@ -256,5 +258,6 @@
 
 
   <script src="js/toggle.js"></script>
+  <script src="js/i18n.js"></script>
 </body>
 </html>
