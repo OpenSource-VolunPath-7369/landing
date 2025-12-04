@@ -651,8 +651,8 @@ a{
 }
 
 .team-member__photo {
-  width: 180px;
-  height: 180px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
   overflow: hidden;
   margin-bottom: 1.5rem;
@@ -672,7 +672,7 @@ a{
 }
 
 .team-member h3 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 600;
   color: var(--negro);
   margin: 0;
@@ -694,12 +694,12 @@ a{
   }
 
   .team-member__photo {
-    width: 140px;
-    height: 140px;
+    width: 180px;
+    height: 180px;
   }
 
   .team-member h3 {
-    font-size: 1.25rem;
+    font-size: 1.75rem;
   }
 }
 
