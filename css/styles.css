@@ -651,8 +651,8 @@ a{
 }
 
 .team-member__photo {
-  width: 120px;
-  height: 120px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   overflow: hidden;
   margin-bottom: 1.5rem;
@@ -694,8 +694,8 @@ a{
   }
 
   .team-member__photo {
-    width: 100px;
-    height: 100px;
+    width: 140px;
+    height: 140px;
   }
 
   .team-member h3 {
@@ -718,7 +718,7 @@ a{
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  gap: 1rem;
   justify-items: center;
 }
 
