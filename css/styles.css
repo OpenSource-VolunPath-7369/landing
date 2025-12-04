@@ -561,9 +561,9 @@ a{
 .video-wrapper {
   position: relative;
   width: 100%;
-  max-width: 800px;
+  max-width: 700px;
   margin: 0 auto;
-  padding-bottom: 45%; /* Reduced from 56.25% to make it less tall */
+  padding-bottom: 39.375%; /* 16:9 ratio on 700px = ~276px height (much smaller) */
   height: 0;
   overflow: hidden;
   border-radius: 1.5rem;
