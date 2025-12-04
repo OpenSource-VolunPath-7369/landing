@@ -223,6 +223,9 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
           if (!volunteer) {
             throw new Error('No se encontró el perfil de voluntario. Por favor completa tu perfil primero.');
           }
+          if (!this.currentUser) {
+            throw new Error('Usuario no encontrado');
+          }
           console.log('Registrando con volunteerId:', volunteer.id, 'publicationId:', publication.id, 'volunteerName:', this.currentUser.name);
           return this.enrollmentService.registerVolunteer(
             publication.id,
@@ -242,6 +245,9 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
               return volunteer;
             }),
             switchMap(volunteer => {
+              if (!this.currentUser) {
+                throw new Error('Usuario no encontrado');
+              }
               console.log('Registrando con volunteerId (alternativo):', volunteer.id, 'publicationId:', publication.id);
               return this.enrollmentService.registerVolunteer(
                 publication.id,
@@ -351,7 +357,7 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   trackByEnrollmentId(index: number, enrollment: Enrollment): string {
-    return enrollment.id;
+    return String(enrollment.id);
   }
 }
 
