@@ -36,7 +36,7 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private publicationService: PublicationService,
-    private authService: AuthService,
+    public authService: AuthService,
     private organizationService: OrganizationService,
     private enrollmentService: EnrollmentService
   ) {}
