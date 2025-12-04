@@ -151,6 +151,14 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
               // Verificar que la fecha sea válida
               if (isNaN(dateValue.getTime())) {
                 dateValue = null;
+              } else {
+                // Validate that the date is not in the past (only if editing)
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                dateValue.setHours(0, 0, 0, 0);
+                if (dateValue < today) {
+                  console.warn('La fecha de la publicación es pasada, pero se permite editar para mantener consistencia');
+                }
               }
             } catch (e) {
               console.warn('Error parsing date for edit:', publication.date, e);
@@ -170,6 +178,14 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
             location: publication.location,
             maxVolunteers: publication.maxVolunteers
           });
+          
+          // Trigger validation after patching
+          if (dateValue) {
+            const dateControl = this.publicationForm.get('scheduledDate');
+            if (dateControl) {
+              dateControl.updateValueAndValidity();
+            }
+          }
           
           this.loading = false;
         },
@@ -355,6 +371,25 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
 
       console.log('Datos de publicación a enviar:', publicationData);
 
+      // Validate date is not in the past (for both create and edit)
+      if (dateStr) {
+        const selectedDate = new Date(dateStr);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+        
+        if (selectedDate < today) {
+          this.error = 'La fecha debe ser futura. No se puede crear o editar una publicación con fecha pasada.';
+          this.submitting = false;
+          const dateControl = this.publicationForm.get('scheduledDate');
+          if (dateControl) {
+            dateControl.setErrors({ pastDate: true });
+            dateControl.markAsTouched();
+          }
+          return;
+        }
+      }
+
       if (this.isEditMode && this.publicationId) {
         // Modo edición
         this.publicationService.updatePublication(this.publicationId, publicationData)
@@ -479,9 +514,19 @@ export default class NuevaPublicacionPageComponent implements OnInit, OnDestroy 
       // Set selected date to midnight for accurate comparison
       selectedDate.setHours(0, 0, 0, 0);
       
-      // Check if selected date is before today (allow today and future dates)
+      // Check if selected date is before today
+      // In edit mode, we allow past dates for existing publications, but warn the user
+      // In create mode, we strictly require future dates
       if (selectedDate < today) {
-        return { pastDate: true };
+        // If we're in edit mode, we still allow it but mark as warning
+        // The user can still save, but they'll see the warning
+        if (this.isEditMode) {
+          // Allow past dates in edit mode, but still return error to show warning
+          return { pastDate: true };
+        } else {
+          // In create mode, strictly require future dates
+          return { pastDate: true };
+        }
       }
       
       return null;

@@ -7,6 +7,7 @@ import { PublicationService } from '../../../application/services/publication.se
 import { Publication } from '../../../domain/model/publication';
 import { AuthService } from '../../../../auth/application/services/auth.service';
 import { OrganizationService } from '../../../../organizations/application/services/organization.service';
+import { EnrollmentService, Enrollment } from '../../../application/services/enrollment.service';
 import { User } from '../../../../interfaces';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -28,6 +29,7 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
   loading = false;
   error: string | null = null;
   currentUser: User | null = null;
+  publicationEnrollments: { [publicationId: string]: Enrollment[] } = {};
   
   private destroy$ = new Subject<void>();
 
@@ -35,7 +37,8 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private publicationService: PublicationService,
     private authService: AuthService,
-    private organizationService: OrganizationService
+    private organizationService: OrganizationService,
+    private enrollmentService: EnrollmentService
   ) {}
 
   ngOnInit() {
@@ -109,6 +112,10 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
           next: (publications) => {
             this.publications = publications;
             this.loading = false;
+            // Load enrollments for each publication
+            publications.forEach(pub => {
+              this.loadEnrollmentsForPublication(pub.id);
+            });
           },
           error: (error) => {
             this.error = 'Error loading publications';
@@ -124,6 +131,10 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
           next: (publications) => {
             this.publications = publications;
             this.loading = false;
+            // Load enrollments for each publication
+            publications.forEach(pub => {
+              this.loadEnrollmentsForPublication(pub.id);
+            });
           },
           error: (error) => {
             this.error = 'Error loading publications';
@@ -172,6 +183,70 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
 
   retry() {
     this.loadPublications();
+  }
+
+  registerForPublication(publication: Publication) {
+    if (!this.currentUser) {
+      alert('Debes iniciar sesión para registrarte');
+      return;
+    }
+
+    // Check if already registered
+    if (this.enrollmentService.isVolunteerRegistered(publication.id, this.currentUser.id)) {
+      alert('Ya estás registrado en este voluntariado');
+      return;
+    }
+
+    // Check if there are available spots
+    if (!publication.hasAvailableSpots()) {
+      alert('No hay cupos disponibles');
+      return;
+    }
+
+    this.enrollmentService.registerVolunteer(
+      publication.id,
+      this.currentUser.id,
+      this.currentUser.name
+    ).pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result) => {
+          alert('Registrado exitosamente');
+          // Reload enrollments for this publication
+          this.loadEnrollmentsForPublication(publication.id);
+          // Reload publications to update counter
+          this.loadPublications();
+        },
+        error: (error: any) => {
+          console.error('Error registering:', error);
+          alert(error.message || 'Error al registrarse');
+        }
+      });
+  }
+
+  loadEnrollmentsForPublication(publicationId: string) {
+    this.enrollmentService.getEnrollmentsByPublication(publicationId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (enrollments) => {
+          this.publicationEnrollments[publicationId] = enrollments;
+        },
+        error: (error) => {
+          console.error('Error loading enrollments:', error);
+        }
+      });
+  }
+
+  getEnrollmentsForPublication(publicationId: string): Enrollment[] {
+    return this.publicationEnrollments[publicationId] || [];
+  }
+
+  isRegistered(publicationId: string): boolean {
+    if (!this.currentUser) return false;
+    return this.enrollmentService.isVolunteerRegistered(publicationId, this.currentUser.id);
+  }
+
+  trackByPublicationId(index: number, publication: Publication): string {
+    return publication.id;
   }
 }
 

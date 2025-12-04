@@ -32,7 +32,7 @@
   <!-- Main Content -->
   <div *ngIf="!loading && !error" class="main-content">
     <!-- Publication Card -->
-    <div class="publication-card" *ngFor="let publication of publications">
+    <div class="publication-card" *ngFor="let publication of publications; trackBy: trackByPublicationId">
       <div class="publication-image">
         <img [src]="publication.image" [alt]="publication.title" class="post-image">
       </div>
@@ -69,6 +69,60 @@
       <div class="publication-caption">
         <h3 class="publication-title">{{ publication.title }}</h3>
         <p>{{ publication.description }}</p>
+        
+        <!-- Date and Location -->
+        <div class="publication-info">
+          <span class="info-item">
+            <i class="fa-solid fa-calendar"></i>
+            {{ publication.date }} a las {{ publication.time }}
+          </span>
+          <span class="info-item">
+            <i class="fa-solid fa-location-dot"></i>
+            {{ publication.location }}
+          </span>
+        </div>
+
+        <!-- Volunteer Counter and Register Button -->
+        <div class="volunteer-section" *ngIf="authService.isVolunteer() || !authService.isOrganization()">
+          <div class="volunteer-counter">
+            <i class="fa-solid fa-users"></i>
+            <span>{{ publication.currentVolunteers }}/{{ publication.maxVolunteers }} voluntarios</span>
+          </div>
+          
+          <button 
+            *ngIf="!isRegistered(publication.id) && publication.hasAvailableSpots()"
+            class="register-button"
+            type="button"
+            (click)="registerForPublication(publication)">
+            <i class="fa-solid fa-user-plus"></i>
+            Registrarse
+          </button>
+          
+          <span 
+            *ngIf="isRegistered(publication.id)"
+            class="registered-badge">
+            <i class="fa-solid fa-check-circle"></i>
+            Registrado
+          </span>
+          
+          <span 
+            *ngIf="!publication.hasAvailableSpots()"
+            class="full-badge">
+            <i class="fa-solid fa-ban"></i>
+            Sin cupos disponibles
+          </span>
+        </div>
+
+        <!-- Volunteers List -->
+        <div class="volunteers-list" *ngIf="getEnrollmentsForPublication(publication.id).length > 0">
+          <h4 class="volunteers-list-title">Voluntarios registrados:</h4>
+          <ul class="volunteers-names">
+            <li *ngFor="let enrollment of getEnrollmentsForPublication(publication.id)">
+              {{ enrollment.volunteerName }}
+            </li>
+          </ul>
+        </div>
+
         <div *ngIf="publication.tags && publication.tags.length > 0" class="tags">
           <span *ngFor="let tag of publication.tags" class="tag">{{ tag }}</span>
         </div>
