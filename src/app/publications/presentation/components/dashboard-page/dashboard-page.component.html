@@ -114,10 +114,10 @@
         </div>
 
         <!-- Volunteers List -->
-        <div class="volunteers-list" *ngIf="getEnrollmentsForPublication(publication.id).length > 0">
+        <div class="volunteers-list" *ngIf="getEnrollmentsForPublication(publication.id)?.length > 0">
           <h4 class="volunteers-list-title">Voluntarios registrados:</h4>
           <ul class="volunteers-names">
-            <li *ngFor="let enrollment of getEnrollmentsForPublication(publication.id)">
+            <li *ngFor="let enrollment of getEnrollmentsForPublication(publication.id); trackBy: trackByEnrollmentId">
               {{ enrollment.volunteerName }}
             </li>
           </ul>

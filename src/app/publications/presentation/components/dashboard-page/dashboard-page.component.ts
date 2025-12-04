@@ -210,11 +210,20 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
     ).pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (result) => {
-          alert('Registrado exitosamente');
-          // Reload enrollments for this publication
+          console.log('Registro exitoso:', result);
+          
+          // Immediately update enrollments list for this publication
           this.loadEnrollmentsForPublication(publication.id);
-          // Reload publications to update counter
-          this.loadPublications();
+          
+          // Reload publications to get updated counter from backend
+          this.publicationService.refreshPublications();
+          
+          // Wait a bit and then reload to ensure we get the updated data
+          setTimeout(() => {
+            this.loadPublications();
+          }, 300);
+          
+          alert('Registrado exitosamente');
         },
         error: (error: any) => {
           console.error('Error registering:', error);
@@ -228,7 +237,12 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (enrollments) => {
-          this.publicationEnrollments[publicationId] = enrollments;
+          console.log('Enrollments cargados para publicación', publicationId, ':', enrollments);
+          // Use spread operator to trigger change detection
+          this.publicationEnrollments = {
+            ...this.publicationEnrollments,
+            [publicationId]: enrollments
+          };
         },
         error: (error) => {
           console.error('Error loading enrollments:', error);
@@ -247,6 +261,10 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
 
   trackByPublicationId(index: number, publication: Publication): string {
     return publication.id;
+  }
+
+  trackByEnrollmentId(index: number, enrollment: Enrollment): string {
+    return enrollment.id;
   }
 }
 

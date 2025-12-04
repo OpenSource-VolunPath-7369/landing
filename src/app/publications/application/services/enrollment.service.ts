@@ -64,10 +64,13 @@ export class EnrollmentService {
         };
         
         return this.publicationService.updatePublication(publicationId, updatedData).pipe(
-          tap(() => {
-            console.log('Contador de voluntarios actualizado');
-            // Refresh publications list
-            this.publicationService.refreshPublications();
+          tap((updatedPublication) => {
+            console.log('Contador de voluntarios actualizado:', updatedPublication);
+            console.log('Nuevo contador:', updatedPublication.currentVolunteers);
+            // Refresh publications list to ensure UI is updated
+            setTimeout(() => {
+              this.publicationService.refreshPublications();
+            }, 200);
           }),
           map(() => ({
             success: true,
