@@ -561,9 +561,9 @@ a{
 .video-wrapper {
   position: relative;
   width: 100%;
-  max-width: 600px;
+  max-width: 750px;
   margin: 0 auto;
-  padding-bottom: 30%; /* Much smaller height - approximately 180px height */
+  padding-bottom: 30%; /* Keep height perfect - approximately 225px height */
   height: 0;
   overflow: hidden;
   border-radius: 1.5rem;
