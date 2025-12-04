@@ -541,12 +541,14 @@ a{
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
 .video-wrapper {
   position: relative;
   width: 100%;
   max-width: 900px;
+  margin: 0 auto;
   padding-bottom: 56.25%; /* 16:9 aspect ratio */
   height: 0;
   overflow: hidden;
@@ -555,7 +557,8 @@ a{
   background: var(--negro);
 }
 
-.team-video {
+.team-video,
+.product-video {
   position: absolute;
   top: 0;
   left: 0;
@@ -565,13 +568,36 @@ a{
   border-radius: 1.5rem;
 }
 
+/* ===== ABOUT THE PRODUCT ===== */
+.about-product {
+  padding: 6rem 2rem;
+  background: var(--bg);
+  text-align: center;
+}
+
+.about-product h2 {
+  margin-bottom: 2rem;
+  font-weight: 600;
+  color: var(--negro);
+}
+
+.about-product__video-container {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
-  .about-team {
+  .about-team,
+  .about-product {
     padding: 4rem 1rem;
   }
 
-  .about-team h2 {
+  .about-team h2,
+  .about-product h2 {
     font-size: 2.5rem;
   }
 
