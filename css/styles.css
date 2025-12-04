@@ -561,9 +561,9 @@ a{
 .video-wrapper {
   position: relative;
   width: 100%;
-  max-width: 750px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding-bottom: 30%; /* Keep height perfect - approximately 225px height */
+  padding-bottom: 30%; /* Keep height perfect - approximately 300px height */
   height: 0;
   overflow: hidden;
   border-radius: 1.5rem;
@@ -651,8 +651,8 @@ a{
 }
 
 .team-member__photo {
-  width: 200px;
-  height: 200px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   overflow: hidden;
   margin-bottom: 1.5rem;
@@ -694,8 +694,8 @@ a{
   }
 
   .team-member__photo {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
   }
 
   .team-member h3 {
