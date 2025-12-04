@@ -211,17 +211,29 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (result) => {
           console.log('Registro exitoso:', result);
+          console.log('Enrollment creado:', result.enrollment);
           
-          // Immediately update enrollments list for this publication
+          // Immediately add the enrollment to the local list
+          if (result.enrollment) {
+            const currentEnrollments = this.publicationEnrollments[publication.id] || [];
+            this.publicationEnrollments = {
+              ...this.publicationEnrollments,
+              [publication.id]: [...currentEnrollments, result.enrollment]
+            };
+            console.log('Enrollments actualizados localmente:', this.publicationEnrollments[publication.id]);
+          }
+          
+          // Reload enrollments from storage to ensure consistency
           this.loadEnrollmentsForPublication(publication.id);
           
           // Reload publications to get updated counter from backend
-          this.publicationService.refreshPublications();
-          
-          // Wait a bit and then reload to ensure we get the updated data
+          // Wait a bit to ensure backend has processed the update
           setTimeout(() => {
-            this.loadPublications();
-          }, 300);
+            this.publicationService.refreshPublications();
+            setTimeout(() => {
+              this.loadPublications();
+            }, 200);
+          }, 500);
           
           alert('Registrado exitosamente');
         },
