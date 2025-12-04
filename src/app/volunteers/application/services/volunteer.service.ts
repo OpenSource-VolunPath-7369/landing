@@ -64,6 +64,12 @@ export class VolunteerService {
     );
   }
 
+  getVolunteerByUserId(userId: string): Observable<Volunteer> {
+    return this.apiService.get<any>(`volunteers/user/${userId}`).pipe(
+      map(volunteer => this.mapToVolunteer(volunteer))
+    );
+  }
+
   createVolunteer(volunteerData: Partial<Volunteer> & { userId?: number | null }): Observable<Volunteer> {
     const newVolunteer: any = {
       name: volunteerData.name,

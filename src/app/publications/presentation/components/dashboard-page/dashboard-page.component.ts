@@ -2,12 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { PublicationService } from '../../../application/services/publication.service';
 import { Publication } from '../../../domain/model/publication';
 import { AuthService } from '../../../../auth/application/services/auth.service';
 import { OrganizationService } from '../../../../organizations/application/services/organization.service';
 import { EnrollmentService, Enrollment } from '../../../application/services/enrollment.service';
+import { VolunteerService } from '../../../../volunteers/application/services/volunteer.service';
 import { User } from '../../../../interfaces';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -38,7 +40,8 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
     private publicationService: PublicationService,
     public authService: AuthService,
     private organizationService: OrganizationService,
-    private enrollmentService: EnrollmentService
+    private enrollmentService: EnrollmentService,
+    private volunteerService: VolunteerService
   ) {}
 
   ngOnInit() {
@@ -211,17 +214,50 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.enrollmentService.registerVolunteer(
-      publication.id,
-      this.currentUser.id,
-      this.currentUser.name
-    ).pipe(takeUntil(this.destroy$))
+    // First, get the volunteer ID from the backend using userId
+    // The backend expects volunteerId, not userId
+    this.volunteerService.getVolunteerByUserId(this.currentUser.id)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(volunteer => {
+          if (!volunteer) {
+            throw new Error('No se encontró el perfil de voluntario. Por favor completa tu perfil primero.');
+          }
+          console.log('Registrando con volunteerId:', volunteer.id, 'publicationId:', publication.id, 'volunteerName:', this.currentUser.name);
+          return this.enrollmentService.registerVolunteer(
+            publication.id,
+            volunteer.id,
+            this.currentUser.name
+          );
+        }),
+        catchError(error => {
+          console.error('Error obteniendo voluntario:', error);
+          // Try alternative: get from volunteers list
+          return this.volunteerService.getVolunteers().pipe(
+            map(volunteers => {
+              const volunteer = volunteers.find(v => v.userId === this.currentUser?.id);
+              if (!volunteer) {
+                throw new Error('No se encontró el perfil de voluntario. Por favor completa tu perfil primero.');
+              }
+              return volunteer;
+            }),
+            switchMap(volunteer => {
+              console.log('Registrando con volunteerId (alternativo):', volunteer.id, 'publicationId:', publication.id);
+              return this.enrollmentService.registerVolunteer(
+                publication.id,
+                volunteer.id,
+                this.currentUser.name
+              );
+            })
+          );
+        })
+      )
       .subscribe({
         next: (result) => {
           console.log('Registro exitoso:', result);
           console.log('Enrollment creado:', result.enrollment);
           
-          // Reload enrollments from backend
+          // Reload enrollments from backend immediately
           this.loadEnrollmentsForPublication(publication.id);
           
           // Reload publications to get updated counter from backend
@@ -243,19 +279,23 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   loadEnrollmentsForPublication(publicationId: string) {
+    console.log('Cargando enrollments para publicación:', publicationId);
     this.enrollmentService.getEnrollmentsByPublication(publicationId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (enrollments) => {
           console.log('Enrollments cargados para publicación', publicationId, ':', enrollments);
+          console.log('Cantidad de enrollments:', enrollments.length);
           // Use spread operator to trigger change detection
           this.publicationEnrollments = {
             ...this.publicationEnrollments,
             [publicationId]: enrollments
           };
+          console.log('Enrollments actualizados en componente:', this.publicationEnrollments[publicationId]);
         },
         error: (error) => {
           console.error('Error loading enrollments:', error);
+          console.error('Error completo:', JSON.stringify(error, null, 2));
         }
       });
   }
@@ -269,22 +309,39 @@ export default class DashboardPageComponent implements OnInit, OnDestroy {
     if (!this.currentUser) return false;
     // Check synchronously from local state first
     const enrollments = this.publicationEnrollments[publicationId] || [];
-    return enrollments.some(e => String(e.volunteerId) === this.currentUser?.id);
+    // We need to check by volunteerId, not userId
+    // For now, check by volunteerName as a workaround
+    return enrollments.some(e => e.volunteerName === this.currentUser?.name);
   }
 
   checkRegistrationStatus(publicationId: string) {
     if (!this.currentUser) return;
-    this.enrollmentService.isVolunteerRegistered(publicationId, this.currentUser.id)
-      .pipe(takeUntil(this.destroy$))
+    
+    // Get volunteer ID first
+    this.volunteerService.getVolunteers()
+      .pipe(
+        takeUntil(this.destroy$),
+        map(volunteers => {
+          const volunteer = volunteers.find(v => v.userId === this.currentUser?.id);
+          return volunteer?.id;
+        }),
+        switchMap(volunteerId => {
+          if (!volunteerId) {
+            return of(false);
+          }
+          return this.enrollmentService.isVolunteerRegistered(publicationId, volunteerId);
+        }),
+        catchError(error => {
+          console.error('Error checking registration status:', error);
+          return of(false);
+        })
+      )
       .subscribe({
         next: (isRegistered) => {
           // Update local state if needed
           if (isRegistered) {
             this.loadEnrollmentsForPublication(publicationId);
           }
-        },
-        error: (error) => {
-          console.error('Error checking registration status:', error);
         }
       });
   }
