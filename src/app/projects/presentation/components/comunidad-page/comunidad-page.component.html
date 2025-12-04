@@ -205,7 +205,7 @@
                     [src]="getVolunteerAvatar(enrollment.volunteerId)" 
                     [alt]="enrollment.volunteerName"
                     class="volunteer-avatar"
-                    (error)="$event.target.src='/assets/default-avatar.png'">
+                    (error)="onImageError($event)">
                 </div>
               </div>
             </div>

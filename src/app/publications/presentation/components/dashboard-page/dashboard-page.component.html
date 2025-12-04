@@ -121,11 +121,11 @@
               *ngFor="let enrollment of getEnrollmentsForPublication(publication.id); trackBy: trackByEnrollmentId"
               class="volunteer-avatar-container"
               [title]="enrollment.volunteerName">
-              <img 
-                [src]="getVolunteerAvatar(enrollment.volunteerId)" 
-                [alt]="enrollment.volunteerName"
-                class="volunteer-avatar"
-                (error)="$event.target.src='/assets/default-avatar.png'">
+                  <img 
+                    [src]="getVolunteerAvatar(enrollment.volunteerId)" 
+                    [alt]="enrollment.volunteerName"
+                    class="volunteer-avatar"
+                    (error)="onImageError($event)">
             </div>
           </div>
         </div>

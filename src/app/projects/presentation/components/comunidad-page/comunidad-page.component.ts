@@ -398,6 +398,13 @@ export default class ComunidadPageComponent implements OnInit, OnDestroy {
     return this.volunteerAvatars[volunteerId] || '/assets/default-avatar.png';
   }
 
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.src = '/assets/default-avatar.png';
+    }
+  }
+
   checkRegistrationStatus(publicationId: string) {
     if (!this.currentUser) return;
     
