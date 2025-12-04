@@ -1,0 +1,33 @@
+<div id="logo" class="px-6 pt-6 pb-5 border-b border-white/20">
+            <!-- Logo y nombre de Volunpath -->
+            <div class="flex items-start space-x-3">
+                <img src="/assets/volunpath-logo.png" 
+                     alt="Logo Volunpath" 
+                     class="w-14 h-14 rounded-xl shadow-xl flex-shrink-0 mt-0.5 object-cover bg-white/20 border-2 border-white/30 backdrop-blur-sm hover:scale-110 transition-all duration-300"
+                     onerror="this.src='/assets/mundo.png'">
+                <div class="flex-1 min-w-0">
+                    <h1 class="text-xl font-black text-white tracking-tight mb-2 drop-shadow-lg">Volunpath</h1>
+                    <p class="text-xs text-white/90 font-semibold leading-relaxed">Explora y gestiona organizaciones</p>
+                </div>
+            </div>
+           </div>
+           <div id="profile" class="px-6 py-5 border-b border-white/20">
+            <p class="text-xs text-white/80 mb-3 font-bold uppercase tracking-wider">{{ 'header.welcome' | translate }}</p>
+            <a [routerLink]="['/perfil']" class="inline-flex space-x-3 items-center group hover:bg-white/10 rounded-xl p-2 -ml-2 transition-all duration-300 hover:scale-105 cursor-pointer">
+                <span class="relative flex-shrink-0">
+                    <img class="rounded-full w-12 h-12 border-3 border-white/40 shadow-xl group-hover:border-white/60 transition-all duration-300 group-hover:ring-2 group-hover:ring-white/50" 
+                         [src]="getUserAvatar()" 
+                         [alt]="getUserName()"
+                         onerror="this.src='https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=128&q=80'">
+                    <span class="absolute bottom-0 right-0 w-4 h-4 bg-blue-400 border-3 border-white rounded-full shadow-lg animate-pulse"></span>
+                </span>
+                <div class="flex flex-col">
+                    <span class="text-base font-bold text-white group-hover:text-white transition-colors drop-shadow-md">
+                        {{ getUserName() }}
+                    </span>
+                    <span class="text-xs text-white/70 font-medium mt-0.5">
+                        {{ getUserType() | translate }}
+                    </span>
+                </div>
+            </a>
+           </div>

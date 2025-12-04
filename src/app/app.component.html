@@ -1,0 +1,4 @@
+<side-menu *ngIf="showSidebar"></side-menu>
+<div [class.ml-[340px]]="showSidebar" [class.px-4]="showSidebar" class="flex flex-col flex-1 w-full h-full text-slate-800">
+  <router-outlet></router-outlet>
+</div>

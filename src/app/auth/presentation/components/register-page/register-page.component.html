@@ -1,0 +1,358 @@
+<div class="register-container">
+  <div class="register-card">
+    <!-- Logo -->
+    <div class="logo-section">
+      <div class="logo-box">
+        <img src="/assets/volunpath-logo.png" 
+             alt="Volunpath Logo" 
+             class="logo-image"
+             (error)="onLogoError($event)">
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="title-section">
+      <h1 class="register-title">{{ 'auth.register.title' | translate }}</h1>
+    </div>
+
+    <!-- Tipo de usuario -->
+    <div class="form-section">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>{{ 'auth.register.registerAs' | translate }}</mat-label>
+        <mat-select [value]="userType" (selectionChange)="userType = $event.value; onUserTypeChange()">
+          <mat-option value="volunteer">{{ 'auth.register.volunteer' | translate }}</mat-option>
+          <mat-option value="organization">{{ 'auth.register.organization' | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Register Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      
+      <!-- Formulario de Voluntario -->
+      <div *ngIf="userType === 'volunteer'">
+        <div class="form-section">
+          <h3 class="section-title">{{ 'auth.register.personalData' | translate }}</h3>
+          
+          <!-- Campo de imagen de perfil -->
+          <div class="image-upload-section">
+            <label class="image-upload-label">{{ 'auth.register.profilePhoto' | translate }}</label>
+            <div class="image-upload-container">
+              <!-- Estado de carga -->
+              <div *ngIf="imageLoading" class="image-loading">
+                <div class="spinner"></div>
+                <p class="loading-text">{{ 'auth.register.processingImage' | translate }}</p>
+              </div>
+              
+              <div class="image-preview" *ngIf="selectedImage && !imageLoading">
+                <img [src]="selectedImage" alt="Vista previa" class="preview-image">
+                <button type="button" mat-icon-button class="remove-image-btn" (click)="removeImage()" [title]="'auth.register.removeImage' | translate">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+              <div class="image-upload-placeholder" *ngIf="!selectedImage && !imageLoading">
+                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                <p class="upload-text">{{ 'auth.register.clickToUpload' | translate }}</p>
+                <p class="upload-hint">{{ 'auth.register.imageHint' | translate }}</p>
+              </div>
+              <input type="file" 
+                     accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                     (change)="onImageSelected($event)"
+                     class="file-input"
+                     id="avatar-upload"
+                     [disabled]="imageLoading">
+              <label for="avatar-upload" 
+                     class="file-input-label"
+                     [class.disabled]="imageLoading">
+                <mat-icon>add_photo_alternate</mat-icon>
+                {{ selectedImage ? ('auth.register.changeImage' | translate) : ('auth.register.selectImage' | translate) }}
+              </label>
+            </div>
+          </div>
+
+          <!-- Nombre y Ubicación lado a lado -->
+          <div class="form-row">
+            <mat-form-field appearance="fill" class="form-field-half">
+              <mat-label>{{ 'auth.register.fullName' | translate }}</mat-label>
+              <mat-icon matPrefix>person</mat-icon>
+              <input matInput 
+                     formControlName="name">
+              <mat-error *ngIf="registerForm.get('name')?.hasError('required')">
+                {{ 'auth.register.nameRequired' | translate }}
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('name')?.hasError('minlength')">
+                {{ 'auth.register.nameMinLength' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="form-field-half">
+              <mat-label>{{ 'auth.register.location' | translate }}</mat-label>
+              <mat-icon matPrefix>location_on</mat-icon>
+              <input matInput 
+                     formControlName="location">
+              <mat-error *ngIf="registerForm.get('location')?.hasError('required')">
+                {{ 'auth.register.locationRequired' | translate }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Correo electrónico solo -->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>{{ 'auth.register.email' | translate }}</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput 
+                   type="email"
+                   formControlName="email">
+            <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
+              {{ 'auth.register.emailRequired' | translate }}
+            </mat-error>
+            <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
+              {{ 'auth.register.emailInvalid' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Contraseña y Confirmar contraseña lado a lado -->
+          <div class="form-row">
+            <mat-form-field appearance="fill" class="form-field-half">
+              <mat-label>{{ 'auth.register.password' | translate }}</mat-label>
+              <mat-icon matPrefix>lock</mat-icon>
+              <input matInput 
+                     type="password"
+                     formControlName="password">
+              <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
+                {{ 'auth.register.passwordRequired' | translate }}
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
+                {{ 'auth.register.passwordMinLength' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="form-field-half">
+              <mat-label>{{ 'auth.register.confirmPassword' | translate }}</mat-label>
+              <mat-icon matPrefix>lock</mat-icon>
+              <input matInput 
+                     type="password"
+                     formControlName="confirmPassword">
+              <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
+                {{ 'auth.register.confirmPasswordRequired' | translate }}
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('passwordMismatch')">
+                {{ 'auth.register.passwordsMismatch' | translate }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>{{ 'auth.register.bio' | translate }}</mat-label>
+            <textarea matInput 
+                      formControlName="bio" 
+                      rows="2"></textarea>
+            <mat-error *ngIf="registerForm.get('bio')?.hasError('maxlength')">
+              {{ 'auth.register.bioMaxLength' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Formulario de Organización -->
+      <div *ngIf="userType === 'organization'">
+        <!-- Campo de imagen de perfil para organización -->
+        <div class="form-section">
+          <div class="image-upload-section">
+            <label class="image-upload-label">{{ 'auth.register.orgLogo' | translate }}</label>
+            <div class="image-upload-container">
+              <!-- Estado de carga -->
+              <div *ngIf="imageLoading" class="image-loading">
+                <div class="spinner"></div>
+                <p class="loading-text">{{ 'auth.register.processingImage' | translate }}</p>
+              </div>
+              
+              <div class="image-preview" *ngIf="selectedImage && !imageLoading">
+                <img [src]="selectedImage" alt="Vista previa" class="preview-image">
+                <button type="button" mat-icon-button class="remove-image-btn" (click)="removeImage()" [title]="'auth.register.removeImage' | translate">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+              <div class="image-upload-placeholder" *ngIf="!selectedImage && !imageLoading">
+                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                <p class="upload-text">{{ 'auth.register.clickToUploadLogo' | translate }}</p>
+                <p class="upload-hint">{{ 'auth.register.imageHint' | translate }}</p>
+              </div>
+              <input type="file" 
+                     accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                     (change)="onImageSelected($event)"
+                     class="file-input"
+                     id="org-logo-upload"
+                     [disabled]="imageLoading">
+              <label for="org-logo-upload" 
+                     class="file-input-label"
+                     [class.disabled]="imageLoading">
+                <mat-icon>add_photo_alternate</mat-icon>
+                {{ selectedImage ? ('auth.register.changeLogo' | translate) : ('auth.register.selectLogo' | translate) }}
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Datos de la organización -->
+        <div class="form-section">
+          <h3 class="section-title">{{ 'auth.register.organizationData' | translate }}</h3>
+        
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>{{ 'auth.register.organizationName' | translate }}</mat-label>
+          <mat-icon matPrefix>business</mat-icon>
+          <input matInput 
+                 formControlName="organizationName">
+          <mat-error *ngIf="registerForm.get('organizationName')?.hasError('required')">
+            {{ 'auth.register.nameRequired' | translate }}
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('organizationName')?.hasError('minlength')">
+            {{ 'auth.register.nameMinLength' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Tipo de organización -->
+      <div class="form-section">
+        <h3 class="section-title">{{ 'auth.register.organizationType' | translate }}</h3>
+        
+        <mat-radio-group formControlName="organizationType" class="radio-group">
+          <mat-radio-button value="ONG" class="radio-option">{{ 'auth.register.orgType.ONG' | translate }}</mat-radio-button>
+          <mat-radio-button value="Organización Social" class="radio-option">{{ 'auth.register.orgType.social' | translate }}</mat-radio-button>
+          <mat-radio-button value="Organización Juvenil" class="radio-option">{{ 'auth.register.orgType.youth' | translate }}</mat-radio-button>
+          <mat-radio-button value="Organización Voluntariado" class="radio-option">{{ 'auth.register.orgType.volunteer' | translate }}</mat-radio-button>
+        </mat-radio-group>
+        <mat-error *ngIf="registerForm.get('organizationType')?.hasError('required') && registerForm.get('organizationType')?.touched">
+          {{ 'auth.register.organizationTypeRequired' | translate }}
+        </mat-error>
+      </div>
+
+      <!-- Campos adicionales de organización -->
+      <div class="form-section">
+        <!-- Distrito y Correo lado a lado -->
+        <div class="form-row">
+          <mat-form-field appearance="fill" class="form-field-half">
+            <mat-label>{{ 'auth.register.district' | translate }}</mat-label>
+            <mat-icon matPrefix>location_on</mat-icon>
+            <input matInput 
+                   formControlName="district">
+            <mat-error *ngIf="registerForm.get('district')?.hasError('required')">
+              {{ 'auth.register.districtRequired' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="form-field-half">
+            <mat-label>{{ 'auth.register.organizationEmail' | translate }}</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput 
+                   type="email"
+                   formControlName="organizationEmail">
+            <mat-error *ngIf="registerForm.get('organizationEmail')?.hasError('required')">
+              {{ 'auth.register.emailRequired' | translate }}
+            </mat-error>
+            <mat-error *ngIf="registerForm.get('organizationEmail')?.hasError('email')">
+              {{ 'auth.register.emailInvalid' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>{{ 'auth.register.organizationPhone' | translate }}</mat-label>
+          <mat-icon matPrefix>phone</mat-icon>
+          <input matInput 
+                 formControlName="organizationPhone">
+          <mat-error *ngIf="registerForm.get('organizationPhone')?.hasError('required')">
+            {{ 'auth.register.phoneRequired' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Datos del representante -->
+      <div class="form-section">
+        <h3 class="section-title">{{ 'auth.register.representativeData' | translate }}</h3>
+        
+        <!-- Nombre y Correo lado a lado -->
+        <div class="form-row">
+          <mat-form-field appearance="fill" class="form-field-half">
+            <mat-label>{{ 'auth.register.representativeName' | translate }}</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput 
+                   formControlName="representativeName">
+            <mat-error *ngIf="registerForm.get('representativeName')?.hasError('required')">
+              {{ 'auth.register.nameRequired' | translate }}
+            </mat-error>
+            <mat-error *ngIf="registerForm.get('representativeName')?.hasError('minlength')">
+              {{ 'auth.register.nameMinLength' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="form-field-half">
+            <mat-label>{{ 'auth.register.representativeEmail' | translate }}</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput 
+                   type="email"
+                   formControlName="representativeEmail">
+            <mat-error *ngIf="registerForm.get('representativeEmail')?.hasError('required')">
+              {{ 'auth.register.emailRequired' | translate }}
+            </mat-error>
+            <mat-error *ngIf="registerForm.get('representativeEmail')?.hasError('email')">
+              {{ 'auth.register.emailInvalid' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Contraseña y Confirmar contraseña lado a lado -->
+        <div class="form-row">
+          <mat-form-field appearance="fill" class="form-field-half">
+            <mat-label>{{ 'auth.register.password' | translate }}</mat-label>
+            <mat-icon matPrefix>lock</mat-icon>
+            <input matInput 
+                   type="password"
+                   formControlName="password">
+            <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
+              {{ 'auth.register.passwordRequired' | translate }}
+            </mat-error>
+            <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
+              {{ 'auth.register.passwordMinLength' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="form-field-half">
+            <mat-label>{{ 'auth.register.confirmPassword' | translate }}</mat-label>
+            <mat-icon matPrefix>lock</mat-icon>
+            <input matInput 
+                   type="password"
+                   formControlName="confirmPassword">
+            <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
+              {{ 'auth.register.confirmPasswordRequired' | translate }}
+            </mat-error>
+            <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('passwordMismatch')">
+              {{ 'auth.register.passwordsMismatch' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button mat-button 
+                type="button"
+                (click)="onCancel()"
+                class="cancel-button">
+          {{ 'auth.register.cancel' | translate }}
+        </button>
+        <button mat-raised-button 
+                color="primary" 
+                type="submit"
+                class="register-button"
+                [disabled]="registerForm.invalid">
+          <mat-icon>how_to_reg</mat-icon>
+          {{ userType === 'volunteer' ? ('auth.register.registerVolunteer' | translate) : ('auth.register.registerOrganization' | translate) }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+

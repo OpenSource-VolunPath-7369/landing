@@ -1,0 +1,107 @@
+<div class="space-y-4">
+  @if (messages && messages.length > 0) {
+    @for (message of messages; track message.id) {
+      <div class="message-item bg-white rounded-xl p-5 shadow-md border transition-all duration-300 cursor-pointer hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1"
+           [class.bg-blue-50]="!message.isRead"
+           [class.border-blue-300]="!message.isRead"
+           [class.border-2]="!message.isRead"
+           [class.border-gray-200]="message.isRead"
+           [class.highlighted]="isHighlighted(message)"
+           [class.bg-yellow-50]="isHighlighted(message)"
+           [class.border-yellow-400]="isHighlighted(message)"
+           [class.shadow-lg]="isHighlighted(message)"
+           (click)="onMessageClick(message)">
+        <div class="flex items-start space-x-4">
+          <!-- Icono del remitente -->
+          <div class="flex-shrink-0">
+            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center border-2 overflow-hidden shadow-lg transition-all duration-300 group-hover:scale-110"
+                 [class]="getIconClass(message)">
+              <!-- Si senderIcon es una URL, mostrar imagen -->
+              @if (isImageUrl(message.senderIcon)) {
+                <img [src]="message.senderIcon" 
+                     [alt]="getSenderName(message)"
+                     class="w-full h-full object-cover rounded-full"
+                     (error)="onImageError($event, message)"
+                     onerror="this.src='/assets/mundo.png'">
+              } @else {
+                <!-- Si es una clase de FontAwesome, mostrar icono -->
+                <i [class]="getSenderIcon(message)" class="text-2xl"></i>
+              }
+            </div>
+            @if (!message.isRead) {
+              <span class="absolute -mt-2 -ml-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg animate-pulse"></span>
+            }
+          </div>
+          
+          <!-- Contenido del mensaje -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-3 mb-2">
+              <div class="flex-1 min-w-0">
+                <p class="text-base font-bold text-gray-900 mb-1" [class.text-blue-900]="!message.isRead">
+                  {{ getSenderName(message) }}
+                </p>
+                <p class="text-sm text-gray-700 leading-relaxed line-clamp-2" [class.font-semibold]="!message.isRead" [class.text-gray-900]="!message.isRead">
+                  {{ message.content }}
+                </p>
+              </div>
+              
+              <!-- Indicador de tipo de mensaje -->
+              <div class="flex-shrink-0">
+                @switch (message.type) {
+                  @case ('volunteer_inquiry') {
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+                      {{ 'messages.types.inquiry' | translate }}
+                    </span>
+                  }
+                  @case ('activity_details') {
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+                      {{ 'messages.types.details' | translate }}
+                    </span>
+                  }
+                  @case ('confirmation') {
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 border border-yellow-200">
+                      {{ 'messages.types.confirmation' | translate }}
+                    </span>
+                  }
+                  @case ('thank_you') {
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
+                      {{ 'messages.types.thankYou' | translate }}
+                    </span>
+                  }
+                  @default {
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800 border border-gray-200">
+                      {{ 'notifications.types.general' | translate }}
+                    </span>
+                  }
+                }
+              </div>
+            </div>
+            
+            <div class="flex items-center gap-3 mt-3">
+              <p class="text-xs font-medium" [class.text-gray-500]="message.isRead" [class.text-blue-600]="!message.isRead">
+                <i class="fa-solid fa-clock mr-1"></i>
+                {{ formatTimestamp(message.timestamp) }}
+              </p>
+              @if (!message.isRead) {
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-blue-500 text-white">
+                  {{ 'messages.new' | translate }}
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="text-center py-12">
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-4">
+        <svg class="w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+      </div>
+      <h3 class="mt-4 text-lg font-semibold text-gray-900">{{ 'messages.noMessages' | translate }}</h3>
+      <p class="mt-2 text-sm text-gray-500">{{ 'messages.noMessagesDescription' | translate }}</p>
+    </div>
+  }
+</div>
+
